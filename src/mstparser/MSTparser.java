@@ -80,7 +80,7 @@ public class MSTparser {
 				minlink.set(i, new_link);
 				links.add(new_link);
 			}
-			pushLeftLinks(i); // TODO: implement 
+			pushLeftLinks(i);
 		}
 
 	}
