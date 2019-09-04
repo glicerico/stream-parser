@@ -70,9 +70,10 @@ public class MSTparser {
 			Link last = popRightLinks(i);
 			minlink.set(i, getMinLink(last, minlink(last.ri())));
 			curr_score = getScore(i, word) // order matters for ordered pairs TODO: implement
-			if ((curr_score > 0) 
+			if (
+			  (curr_score > 0) 
 			  and (curr_score > minlink.get(i).score)
-			  and (curr_score > getMaxScore())) { // TODO: implement getMaxScore
+			  and (curr_score > getStackMaxScore())) {
 				stack.forEach(stack_link->unLink(stack_link)) // unlink weakest crossing links
 				stack = new ArrayList();
 				unLink(minlink.get(i)); // unlink weakest link in loop
@@ -83,6 +84,18 @@ public class MSTparser {
 			pushLeftLinks(i);
 		}
 
+	}
+
+	// Return the highest score from the stack, or 0 if it's empty
+	private float getStackMaxScore() {
+		curr_max = 0;
+		stack.forEach(curr_link->{
+			if (curr_link.score > curr_max) {
+				curr_max = curr_link.score;
+			}
+		})
+
+		return curr_max;
 	}
 
 	// Removes dead_link from current links
