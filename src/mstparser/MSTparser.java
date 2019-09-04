@@ -53,7 +53,8 @@ public class MSTparser {
 	}
 
 	// Adds one word to the current parsed sentence if other words have been
-	// processed.
+	// processed. If this is the first word in parse, it just gets added to
+	// the processed sentence.
 	public void parseWord(String word, int window) {
 		proc_sentence.add(word);
 		int word_num = proc_sentence.size();
@@ -69,7 +70,7 @@ public class MSTparser {
 		for (int i = word_num - 2; i >= 0 ; i--) {
 			Link last = popRightLinks(i);
 			minlink.set(i, getMinLink(last, minlink(last.ri())));
-			curr_score = getScore(i, word) // order matters for ordered pairs TODO: implement
+			curr_score = getPairScore(i, word_num) // order matters for ordered pairs TODO: implement real scorer
 			if (
 			  (curr_score > 0) 
 			  and (curr_score > minlink.get(i).score)
@@ -85,6 +86,12 @@ public class MSTparser {
 		}
 
 	}
+
+	// DUMMY scorer, to test the rest of the parser
+	private float getPairScore(int w1, int w2) {
+		return 1.0
+	}
+
 
 	// Return the highest score from the stack, or 0 if it's empty
 	private float getStackMaxScore() {
