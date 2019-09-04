@@ -73,16 +73,22 @@ public class MSTparser {
 			if ((curr_score > 0) 
 			  and (curr_score > minlink.get(i).score)
 			  and (curr_score > getMaxScore())) { // TODO: implement getMaxScore
-				unLink(stack) // TODO: implement unLink
+				stack.forEach(stack_link->unLink(stack_link)) // unlink weakest crossing links
 				stack = new ArrayList();
-				unLink(minlink.get(i)); // unLink should handle single links?
+				unLink(minlink.get(i)); // unlink weakest link in loop
 				Link new_link = new Link(i, word_num, curr_score);
-				minlink.set(i, new_link);
+				minlink.set(i, new_link); // assign weakest link from i to word
 				links.add(new_link);
 			}
 			pushLeftLinks(i);
 		}
 
+	}
+
+	// Removes dead_link from current links
+	private void unLink(Link dead_link) {
+		int dead_id = links.indexOf(dead_link);
+		links.remove(dead_id);
 	}
 
 	// Searches the stack from right to left for the right links
