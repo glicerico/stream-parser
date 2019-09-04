@@ -55,7 +55,7 @@ public class MSTparser {
 	// Adds one word to the current parsed sentence if other words have been
 	// processed. If this is the first word in parse, it just gets added to
 	// the processed sentence.
-	public void parseWord(String word, int window) {
+	public void parseWord(String word, int window) { //TODO: include window
 		proc_sentence.add(word);
 		int word_num = proc_sentence.size();
 
@@ -69,13 +69,15 @@ public class MSTparser {
 		// try to connect new word with every word to its left
 		for (int i = word_num - 2; i >= 0 ; i--) {
 			Link last = popRightLinks(i);
-			minlink.set(i, getMinLink(last, minlink(last.ri())));
-			curr_score = getPairScore(i, word_num) // order matters for ordered pairs TODO: implement real scorer
+			if (last != null) {
+				minlink.set(i, getMinLink(last, minlink.get(last.ri)));
+			}
+			float curr_score = getPairScore(i, word_num); // order matters for ordered pairs TODO: implement real scorer
 			if (
 			  (curr_score > 0) 
-			  and (curr_score > minlink.get(i).score)
-			  and (curr_score > getStackMaxScore())) {
-				stack.forEach(stack_link->unLink(stack_link)) // unlink weakest crossing links
+			  && (curr_score > getLinkScore(minlink.get(i)))
+			  && (curr_score > getStackMaxScore())) {
+				stack.forEach(stack_link->unLink(stack_link)); // unlink weakest crossing links
 				stack = new ArrayList();
 				unLink(minlink.get(i)); // unlink weakest link in loop
 				Link new_link = new Link(i, word_num, curr_score);
@@ -89,9 +91,12 @@ public class MSTparser {
 
 	// DUMMY scorer, to test the rest of the parser
 	private float getPairScore(int w1, int w2) {
-		return 1.0
+		return 1.0;
 	}
 
+	private float getLinkScore(Link this_link) {
+		return this_link.score;
+	}
 
 	// Return the highest score from the stack, or 0 if it's empty
 	private float getStackMaxScore() {
@@ -100,7 +105,7 @@ public class MSTparser {
 			if (curr_link.score > curr_max) {
 				curr_max = curr_link.score;
 			}
-		})
+		});
 
 		return curr_max;
 	}
@@ -135,7 +140,7 @@ public class MSTparser {
 			if(index == link.ri){
 				stack.add(link);
 			}
-		})
+		});
 	}
 
 	// Given two links, returns the one with minumum score
