@@ -69,6 +69,18 @@ public class MSTparser {
 		for (int i = word_num - 2; i >= 0 ; i--) {
 			Link last = popRightLinks(i);
 			minlink.set(i, getMinLink(last, minlink(last.ri())));
+			curr_score = getScore(i, word) // order matters for ordered pairs TODO: implement
+			if ((curr_score > 0) 
+			  and (curr_score > minlink.get(i).score)
+			  and (curr_score > getMaxScore())) { // TODO: implement getMaxScore
+				unLink(stack) // TODO: implement unLink
+				stack = new ArrayList();
+				unLink(minlink.get(i)); // unLink should handle single links?
+				Link new_link = new Link(i, word_num, curr_score);
+				minlink.set(i, new_link);
+				links.add(new_link);
+			}
+			pushLeftLinks(i); // TODO: implement 
 		}
 
 	}
@@ -87,6 +99,17 @@ public class MSTparser {
 		}
 
 		return result;
+	}
+
+	// Pushes to the stack all left links of the given index.
+	// Yuret's algorithm is not clear on the order to push them, so
+	// it is done here from left to right in the current link list.
+	private void pushLeftLinks(int index) {
+		links.forEach(link->{
+			if(index == link.ri){
+				stack.add(link);
+			}
+		})
 	}
 
 	// Given two links, returns the one with minumum score
