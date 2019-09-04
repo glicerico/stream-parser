@@ -68,7 +68,7 @@ public class MSTparser {
 		// try to connect new word with every word to its left
 		for (int i = word_num - 2; i >= 0 ; i--) {
 			Link last = popRightLinks(i);
-			minlink.set(i, minimumLink(last, minlink(last.ri())));
+			minlink.set(i, getMinLink(last, minlink(last.ri())));
 		}
 
 	}
@@ -78,15 +78,20 @@ public class MSTparser {
 	// Returns the last link popped (the leftmost).
 	private Link popRightLinks(int index) {
 		Link result;
-		for (int i = stack.size() - 1; i >= 0; i--) {
-			curr_link = stack.get(i);
+		for (int j = stack.size() - 1; j >= 0; j--) {
+			curr_link = stack.get(j);
 			if (curr_link.li == index) {
 				result = curr_link;
-				stack.remove(i);
+				stack.remove(j);
 			}
 		}
 
 		return result;
+	}
+
+	// Given two links, returns the one with minumum score
+	private Link getMinLink(Link l1, Link l2) {
+		return (l1.score >= l2.score) ? l2 : l1;
 	}
 
 	// Prints the current sentence and its parse
