@@ -14,31 +14,46 @@ import java.util.ArrayList;
 
 public class MSTparser {
 
-	public float scores;
+	public float scores; // structure with word-pair scores
 	public String vocabulary;
+	public int window; // parsing window
 	private ArrayList stack = new ArrayList();
-	private ArrayList minlink = new ArrayList();
+	private ArrayList minlink = new ArrayList(); // stores min valued Links
 	private ArrayList links = new ArrayList();
 	private ArrayList proc_sentence = new ArrayList();
 
+	// Define Link structure to use in parser
 	static class Link {
-		public int li, ri;
-		public Link(int left_index, int right_index) {
+		public int li, ri; // left/right indexes of link
+		public float score;
+
+		// Constructor for a dummy link
+		public Link() {
+			this(0, 0, 0);
+		}
+
+		// Class constructor
+		public Link(int left_index, int right_index, float score) {
 			this.li = left_index;
 			this.ri = right_index;
+			this.score = score;
 		}
 
 		@Override
 		public String toString() {
-			return "Link: " + this.li + "-" + this.ri;
+			return "(" + this.li + "-" + this.ri + ", " + this.score + ")";
 		}
 	}
 
-	public MSTparser(String scores, String vocabulary) {
+	// Class constructor
+	public MSTparser(String scores, String vocabulary, int window) {
 		this.scores = Float.parseFloat(scores);
 		this.vocabulary = vocabulary;
+		this.window = window;
 	}
 
+	// Adds one word to the current parsed sentence if other words have been
+	// processed.
 	public void parseWord(String word, int window) {
 		proc_sentence.add(word);
 		int word_num = proc_sentence.size();
@@ -48,11 +63,33 @@ public class MSTparser {
 			return;
 		}
 
-		links.add(new Link(word_num, word_num - 1));
-		minlink.add(new Link(0, 0));
+		minlink.add(new Link()); // initialize position with dummy link
+
+		// try to connect new word with every word to its left
+		for (int i = word_num - 2; i >= 0 ; i--) {
+			Link last = popRightLinks(i);
+			minlink.set(i, minimumLink(last, minlink(last.ri())));
+		}
 
 	}
 
+	// Searches the stack from right to left for the right links
+	// of the given index. If there's a match, pops the link.
+	// Returns the last link popped (the leftmost).
+	private Link popRightLinks(int index) {
+		Link result;
+		for (int i = stack.size() - 1; i >= 0; i--) {
+			curr_link = stack.get(i);
+			if (curr_link.li == index) {
+				result = curr_link;
+				stack.remove(i);
+			}
+		}
+
+		return result;
+	}
+
+	// Prints the current sentence and its parse
 	public void printParse() {
 		System.out.println("Current parse:");
 		System.out.println(proc_sentence.toString());
