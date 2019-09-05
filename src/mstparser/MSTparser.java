@@ -69,7 +69,6 @@ public class MSTparser {
 		// try to connect new word with every word to its left
 		for (int i = word_num - 2; i >= 0 ; i--) {
 			Link last = popRightLinks(i);
-			last = new Link();
 			if (last != null) {
 				minlink.set(i, getMinLink(last, minlink.get(last.ri)));
 			}
@@ -79,9 +78,9 @@ public class MSTparser {
 			  && (curr_score > getLinkScore(minlink.get(i)))
 			  && (curr_score > getStackMaxScore())) {
 				stack.forEach(stack_link->unLink(stack_link)); // unlink weakest crossing links
-				stack = new ArrayList();
+				stack = new ArrayList<Link>();
 				unLink(minlink.get(i)); // unlink weakest link in loop
-				Link new_link = new Link(i, word_num, curr_score);
+				Link new_link = new Link(i, word_num - 1, curr_score);
 				minlink.set(i, new_link); // assign weakest link from i to word
 				links.add(new_link);
 			}
@@ -119,7 +118,9 @@ public class MSTparser {
 	// Removes dead_link from current links
 	private void unLink(Link dead_link) {
 		int dead_id = links.indexOf(dead_link);
-		links.remove(dead_id);
+		if (dead_id >= 0) {
+			links.remove(dead_id);
+		}
 	}
 
 	// Searches the stack from right to left for the right links
@@ -128,11 +129,13 @@ public class MSTparser {
 	private Link popRightLinks(int index) {
 		Link result = null;
 		// Traverse the stack in reverse, to function as stack
-		for (int j = stack.size() - 1; j >= 0; j--) {
-			Link curr_link = stack.get(j);
-			if (curr_link.li == index) {
-				result = curr_link;
-				stack.remove(j);
+		if (stack.size() > 0) {
+			for (int j = stack.size() - 1; j >= 0; j--) {
+				Link curr_link = stack.get(j);
+				if (curr_link.li == index) {
+					result = curr_link;
+					stack.remove(j);
+				}
 			}
 		}
 
