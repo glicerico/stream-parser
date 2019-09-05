@@ -17,10 +17,10 @@ public class MSTparser {
 	public float scores; // structure with word-pair scores
 	public String vocabulary;
 	public int window; // parsing window
-	private ArrayList stack = new ArrayList();
-	private ArrayList minlink = new ArrayList(); // stores min valued Links
-	private ArrayList links = new ArrayList();
-	private ArrayList proc_sentence = new ArrayList();
+	private ArrayList<Link> stack = new ArrayList<Link>();
+	private ArrayList<Link> minlink = new ArrayList<Link>(); // stores min valued Links
+	private ArrayList<Link> links = new ArrayList<Link>();
+	private ArrayList<String> proc_sentence = new ArrayList<String>();
 
 	// Define Link structure to use in parser
 	static class Link {
@@ -69,6 +69,7 @@ public class MSTparser {
 		// try to connect new word with every word to its left
 		for (int i = word_num - 2; i >= 0 ; i--) {
 			Link last = popRightLinks(i);
+			last = new Link();
 			if (last != null) {
 				minlink.set(i, getMinLink(last, minlink.get(last.ri)));
 			}
@@ -91,7 +92,7 @@ public class MSTparser {
 
 	// DUMMY scorer, to test the rest of the parser
 	private float getPairScore(int w1, int w2) {
-		return 1.0;
+		return 1;
 	}
 
 	private float getLinkScore(Link this_link) {
@@ -100,12 +101,17 @@ public class MSTparser {
 
 	// Return the highest score from the stack, or 0 if it's empty
 	private float getStackMaxScore() {
-		curr_max = 0;
-		stack.forEach(curr_link->{
+		float curr_max = 0;
+		for (Link curr_link : stack) {
 			if (curr_link.score > curr_max) {
 				curr_max = curr_link.score;
 			}
-		});
+		}
+		// stack.forEach(curr_link->{
+		// 	if (curr_link.score > curr_max) {
+		// 		curr_max = curr_link.score;
+		// 	}
+		// });
 
 		return curr_max;
 	}
@@ -120,9 +126,10 @@ public class MSTparser {
 	// of the given index. If there's a match, pops the link.
 	// Returns the last link popped (the leftmost).
 	private Link popRightLinks(int index) {
-		Link result;
+		Link result = null;
+		// Traverse the stack in reverse, to function as stack
 		for (int j = stack.size() - 1; j >= 0; j--) {
-			curr_link = stack.get(j);
+			Link curr_link = stack.get(j);
 			if (curr_link.li == index) {
 				result = curr_link;
 				stack.remove(j);
