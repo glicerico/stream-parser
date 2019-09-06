@@ -22,7 +22,7 @@ public class ScorerFn {
 	private HashMap<String,Integer> vocabulary;
 
 	// Class constructor
-	public ScorerFn(HashMap vocab, scores) {
+	public ScorerFn(HashMap vocab, HashMap scores) {
 		this.vocabulary = vocab;
 		this.scores = scores;
 	}
