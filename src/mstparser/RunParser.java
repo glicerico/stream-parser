@@ -17,7 +17,9 @@ public class RunParser {
 	public static void main(String[] args) {
 		System.out.println("Stream parser!");
 
-		MSTparser testParser = new MSTparser("1.333", "dona", 4);
+		ScorerFn scorer = new ScorerFn("test");
+		MSTparser testParser = new MSTparser(scorer);
+
 		testParser.parseWord("primera", 4);
 		testParser.printParse();
 		testParser.parseWord("segunda", 4);
