@@ -17,10 +17,16 @@ public class RunParser {
 	public static void main(String[] args) {
 		System.out.println("Stream parser!");
 
-		MSTparser testParser = new MSTparser("1.333", "dona");
+		MSTparser testParser = new MSTparser("1.333", "dona", 4);
 		testParser.parseWord("primera", 4);
+		testParser.printParse();
 		testParser.parseWord("segunda", 4);
+		testParser.printParse();
 		testParser.parseWord("tercera", 4);
+		testParser.printParse();
+		testParser.parseWord("cuarta", 4);
+		testParser.printParse();
+		testParser.parseWord("quinta", 4);
 		testParser.printParse();
 	}
 }
