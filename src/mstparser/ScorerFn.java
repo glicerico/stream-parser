@@ -8,6 +8,7 @@
  * It determines the hash table index of the words. This allows
  * to accomodate word-pair global scores, as well as 
  * sentence-specific ones.
+ * THIS SCORER WORKS FOR CONTEXT-INDEPENDENT SCORES
  * 
  * @author		Andres Suarez, suarezandres@hotmail.com
  * @since		Sept 2019
@@ -18,14 +19,22 @@ import java.util.HashMap;
 
 public class ScorerFn {
 	private HashMap<String,Float> scores; // structure with word-pair scores
-	private String vocabulary;
+	private HashMap<String,Integer> vocabulary;
 
 	// Class constructor
-	public ScorerFn(String vocab) {
+	public ScorerFn(HashMap vocab, scores) {
 		this.vocabulary = vocab;
+		this.scores = scores;
 	}
 
 	public float getScore(String w1, String w2) {
-		return 1;
+		float curr_score = -1e10; // bad score for words not in vocabulary
+		if (vocabulary.containsKey(w1) && vocabulary.containsKey(w2)) {
+			int w1_index = vocabulary.get(w1);
+			int w2_index = vocabulary.get(w2);
+			curr_score = scores.get(w1_index + "_" + w2_index);
+		}
+
+		return curr_score;
 	}
 }
