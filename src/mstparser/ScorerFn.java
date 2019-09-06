@@ -26,6 +26,6 @@ public class ScorerFn {
 	}
 
 	public float getScore(String w1, String w2) {
-		return 1.0
+		return 1;
 	}
 }

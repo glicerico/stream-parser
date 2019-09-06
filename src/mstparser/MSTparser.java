@@ -160,10 +160,4 @@ public class MSTparser {
 		System.out.println(proc_sentence.toString());
 		System.out.println(links.toString());
 	}
-
-	// Not used, can remove
-	@Override
-	public String toString() {
-		return "Score: " + scores;
-	}
 }
