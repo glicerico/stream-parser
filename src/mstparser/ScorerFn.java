@@ -28,7 +28,7 @@ public class ScorerFn {
 	}
 
 	public float getScore(String w1, String w2) {
-		float curr_score = -1e10; // bad score for words not in vocabulary
+		float curr_score = -1e10f; // bad score for words not in vocabulary
 		if (vocabulary.containsKey(w1) && vocabulary.containsKey(w2)) {
 			int w1_index = vocabulary.get(w1);
 			int w2_index = vocabulary.get(w2);
