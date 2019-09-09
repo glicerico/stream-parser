@@ -14,13 +14,20 @@ import java.util.ArrayList;
 
 public class MSTparser {
 
-	public float scores; // structure with word-pair scores
-	public String vocabulary;
 	public int window; // parsing window
-	private ArrayList<Link> stack = new ArrayList<Link>();
-	private ArrayList<Link> minlink = new ArrayList<Link>(); // stores min valued Links
-	private ArrayList<Link> links = new ArrayList<Link>();
-	private ArrayList<String> proc_sentence = new ArrayList<String>();
+	private ArrayList<Link> stack;
+	private ArrayList<Link> minlink; // stores min valued Links
+	private ArrayList<Link> links;
+	private ArrayList<String> proc_sentence;
+	private ScorerFn scorer;
+
+	// Resets structures, ready to parse a new sentence
+	public void PrepareNewSentence() {
+		stack = new ArrayList<Link>();
+		minlink = new ArrayList<Link>();
+		links = new ArrayList<Link>();
+		proc_sentence = new ArrayList<String>();
+	}
 
 	// Define Link structure to use in parser
 	static class Link {
@@ -46,10 +53,9 @@ public class MSTparser {
 	}
 
 	// Class constructor
-	public MSTparser(String scores, String vocabulary, int window) {
-		this.scores = Float.parseFloat(scores);
-		this.vocabulary = vocabulary;
-		this.window = window;
+	public MSTparser(ScorerFn scorer) {
+		PrepareNewSentence();
+		this.scorer = scorer;
 	}
 
 	// Adds one word to the current parsed sentence if other words have been
@@ -72,7 +78,7 @@ public class MSTparser {
 			if (last != null) {
 				minlink.set(i, getMinLink(last, minlink.get(last.ri)));
 			}
-			float curr_score = getPairScore(i, word_num); // order matters for ordered pairs TODO: implement real scorer
+			float curr_score = scorer.getScore(proc_sentence.get(i), proc_sentence.get(word_num - 1));
 			if (
 			  (curr_score > 0) 
 			  && (curr_score > getLinkScore(minlink.get(i)))
@@ -89,11 +95,6 @@ public class MSTparser {
 
 	}
 
-	// DUMMY scorer, to test the rest of the parser
-	private float getPairScore(int w1, int w2) {
-		return 1;
-	}
-
 	private float getLinkScore(Link this_link) {
 		return this_link.score;
 	}
@@ -106,11 +107,6 @@ public class MSTparser {
 				curr_max = curr_link.score;
 			}
 		}
-		// stack.forEach(curr_link->{
-		// 	if (curr_link.score > curr_max) {
-		// 		curr_max = curr_link.score;
-		// 	}
-		// });
 
 		return curr_max;
 	}
@@ -163,10 +159,5 @@ public class MSTparser {
 		System.out.println("Current parse:");
 		System.out.println(proc_sentence.toString());
 		System.out.println(links.toString());
-	}
-
-	@Override
-	public String toString() {
-		return "Score: " + scores + "\nVocabulary: " + vocabulary;
 	}
 }

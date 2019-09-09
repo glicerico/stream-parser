@@ -10,6 +10,7 @@
 */
 package mstparser;
 
+import java.util.HashMap;
 import mstparser.*;
 
 public class RunParser {
@@ -17,7 +18,13 @@ public class RunParser {
 	public static void main(String[] args) {
 		System.out.println("Stream parser!");
 
-		MSTparser testParser = new MSTparser("1.333", "dona", 4);
+		DummyScores scoreTableInstance = new DummyScores();
+		HashMap scoreTable = scoreTableInstance.returnScoreTable();
+		DummyVocab vocabTableInstance = new DummyVocab();
+		HashMap vocabTable = vocabTableInstance.getScoreTable();
+		ScorerFn scorer = new ScorerFn(vocabTable, scoreTable);
+		MSTparser testParser = new MSTparser(scorer);
+
 		testParser.parseWord("primera", 4);
 		testParser.printParse();
 		testParser.parseWord("segunda", 4);
