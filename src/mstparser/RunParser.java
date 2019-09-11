@@ -20,8 +20,8 @@ public class RunParser {
 
 		DummyScores scoreTableInstance = new DummyScores();
 		HashMap scoreTable = scoreTableInstance.returnScoreTable();
-		DummyVocab vocabTableInstance = new DummyVocab();
-		HashMap vocabTable = vocabTableInstance.getScoreTable();
+		GetVocabulary vocabTableInstance = new GetVocabulary("sample_vocab.txt");
+		HashMap vocabTable = vocabTableInstance.getVocabTable();
 		ScorerFn scorer = new ScorerFn(vocabTable, scoreTable);
 		MSTparser testParser = new MSTparser(scorer);
 
