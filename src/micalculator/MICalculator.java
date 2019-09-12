@@ -49,12 +49,13 @@ public class MICalculator {
 		// Observe pairs of words ocurring within window in sentence
 		for (int i = 0; i < split_sent.length - 1; i++) {
 			if (vocabulary.containsKey(split_sent[i])) {
-				wl_id = vocabulary.get(split_sent[i]);
-				win_edge = min(i + window, split_sent.length - 1);
-				for (int j = i + 1; j < win_edge; j++) {
+				int wl_id = vocabulary.get(split_sent[i]);
+				int win_edge = Math.min(i + window, split_sent.length - 1);
+				for (int j = i + 1; j <= win_edge; j++) {
 					if (vocabulary.containsKey(split_sent[j])) {
-						wr_id = vocabulary.get(split_sent[j]);
-						obsMatrix(wl_id, wr_id) += 1; // TODO: other counting weights?
+						int wr_id = vocabulary.get(split_sent[j]);
+						obsMatrix[wl_id][wr_id] += 1; // TODO: other counting weights?
+						System.out.println("Counted: " + wl_id + " and " + wr_id);
 					}
 				}
 			}
