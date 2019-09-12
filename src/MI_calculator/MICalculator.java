@@ -17,7 +17,8 @@ import java.util.Scanner;
 
 public class MICalculator {
 
-	private SparseMatrix obsMatrix = new ... // TODO
+	//private SparseMatrix obsMatrix = new ... // TODO
+	float[][] obsMatrix = new float[5][5];
 	private HashMap<String,Integer> vocabulary;
 	private HashMap<String,Float> miTable;
 
@@ -25,13 +26,13 @@ public class MICalculator {
 		this.vocabulary = vocabulary;
 	}
 
-	private void ObserveFile(String text_file) {
+	public void ObserveFile(String text_file, int window) {
 		try {
 			Scanner scanner = new Scanner(new File(text_file));
 			while (scanner.hasNextLine()) {
-				String currLine = scanner.nextLine;
-				if (!"".equals(currLine.trim())) { // Skip empty lines
-					ObserveSentence(currLine);
+				String currLine = scanner.nextLine();
+				if (!currLine.trim().equals("")) { // Skip empty lines
+					ObserveSentence(currLine, window);
 				}
 			}
 			scanner.close();
@@ -42,17 +43,26 @@ public class MICalculator {
 
 	// Counts ordered word-pair occurences (observations) in a sentence. 
 	// Only counts pairs occurring within a given window.
-	private void ObserveSentence(String sentence, Int window) {
+	private void ObserveSentence(String sentence, int window) {
 		String[] split_sent = sentence.split("\\s+");
 
 		// Observe pairs of words ocurring within window in sentence
 		for (int i = 0; i < split_sent.length - 1; i++) {
-			win_edge = min(i + window, split_sent.length - 1);
-			wl_id = vocabulary.get(split_sent[i]);
-			for (int j = i + 1; j < win_edge; j++) {
-				wr_id = vocabulary.get(split_sent[j]);
-				obsMatrix(wl_id, wr_id) += 1; // TODO: other counting weights?
+			if (vocabulary.containsKey(split_sent[i])) {
+				wl_id = vocabulary.get(split_sent[i]);
+				win_edge = min(i + window, split_sent.length - 1);
+				for (int j = i + 1; j < win_edge; j++) {
+					if (vocabulary.containsKey(split_sent[j])) {
+						wr_id = vocabulary.get(split_sent[j]);
+						obsMatrix(wl_id, wr_id) += 1; // TODO: other counting weights?
+					}
+				}
 			}
 		}
 	}
+
+	public float[][] getObsMatrix() {
+		return obsMatrix;
+	}
+
 }
