@@ -22,6 +22,6 @@ public class RunCalculator {
 		MICalculator calculatorInstance = new MICalculator(vocabTable);
 		calculatorInstance.ObserveFile("test_files/sample_corpus.txt", 3);
 
-		System.out.println(calculatorInstance.getObsMatrix()[0][1]);
+		calculatorInstance.PrintObsMatrix();
 	}
 }

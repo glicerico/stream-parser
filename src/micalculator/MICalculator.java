@@ -14,16 +14,20 @@ import java.util.HashMap;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+import org.ojalgo.OjAlgoUtils;
+import org.ojalgo.matrix.store.SparseStore;
+
 
 public class MICalculator {
 
-	//private SparseMatrix obsMatrix = new ... // TODO
-	float[][] obsMatrix = new float[5][5];
+    SparseStore<Double> obsMatrix;
 	private HashMap<String,Integer> vocabulary;
 	private HashMap<String,Float> miTable;
 
 	public MICalculator(HashMap vocabulary) {
 		this.vocabulary = vocabulary;
+		int dim = vocabulary.size();
+		obsMatrix = SparseStore.PRIMITIVE.make(dim, dim);
 	}
 
 	public void ObserveFile(String text_file, int window) {
@@ -54,16 +58,20 @@ public class MICalculator {
 				for (int j = i + 1; j <= win_edge; j++) {
 					if (vocabulary.containsKey(split_sent[j])) {
 						int wr_id = vocabulary.get(split_sent[j]);
-						obsMatrix[wl_id][wr_id] += 1; // TODO: other counting weights?
-						System.out.println("Counted: " + wl_id + " and " + wr_id);
+						Double curr_count = obsMatrix.get(wl_id, wr_id);
+						obsMatrix.set(wl_id, wr_id, ++curr_count); // TODO: other counting weights?
 					}
 				}
 			}
 		}
 	}
 
-	public float[][] getObsMatrix() {
-		return obsMatrix;
+	// public CalculateMI() {
+
+	// }
+
+	public void PrintObsMatrix() {
+		System.out.println(obsMatrix);
 	}
 
 }
