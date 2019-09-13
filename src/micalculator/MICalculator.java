@@ -4,7 +4,7 @@
  *
  * Calculates, stores, imports a HashMap of PMI values from a corpus.
  * PMI as defined in: https://en.wikipedia.org/wiki/Pointwise_mutual_information
- * 		
+ * PMI = N(x,y) * N(*,*) / N(x,*) / N(*,y)
  * @author		Andres Suarez, suarezandres@hotmail.com
  * @since		Sept 2019
 */
@@ -14,19 +14,22 @@ import java.util.HashMap;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
-import org.ojalgo.OjAlgoUtils;
 import org.ojalgo.matrix.store.SparseStore;
-
+import org.ojalgo.function.aggregator.Aggregator;
+import org.ojalgo.array.SparseArray;
+import org.ojalgo.array.Primitive64Array;
+import org.ojalgo.matrix.store.MatrixStore;
 
 public class MICalculator {
 
     SparseStore<Double> obsMatrix;
 	private HashMap<String,Integer> vocabulary;
 	private HashMap<String,Float> miTable;
+	int dim; // vocabulary size
 
 	public MICalculator(HashMap vocabulary) {
 		this.vocabulary = vocabulary;
-		int dim = vocabulary.size();
+		dim = vocabulary.size();
 		obsMatrix = SparseStore.PRIMITIVE.make(dim, dim);
 	}
 
@@ -66,9 +69,37 @@ public class MICalculator {
 		}
 	}
 
-	// public CalculateMI() {
+	// Converts observation counts into PMI, as done by Levy, Goldberg and Dagan (Levy et al. 2015). 
+	public void CalculateMI() {
+		SparseArray<Double> lhCounts = SparseArray.factory(Primitive64Array.FACTORY, dim).make();
+		SparseArray<Double> rhCounts = SparseArray.factory(Primitive64Array.FACTORY, dim).make();
+		SparseStore<Double> diagonalLH = SparseStore.PRIMITIVE.make(dim, dim);
+		SparseStore<Double> diagonalRH = SparseStore.PRIMITIVE.make(dim, dim);
+		MatrixStore<Double> pmi = MatrixStore.PRIMITIVE.makeZero(dim, dim).get();
 
-	// }
+		// Get wild_card counts for words on right/left hand sides (rh/lh, respectively)
+		obsMatrix.reduceColumns(Aggregator.SUM, rhCounts); // rh: N(*, y)
+		obsMatrix.reduceRows(Aggregator.SUM, lhCounts); // lh: N(x, *)
+
+		// Get total number of counts N(*,*)
+		double sum_total = 1;//lhCounts.Aggregatable.aggregateAll(Aggregator.SUM);
+
+		// Invert rh and lh counts
+
+		// Create diagonal matrices with wildcard counts
+		for (int i = 0; i < dim; i++){
+			diagonalLH.set(i, i, lhCounts.get(i));
+			diagonalRH.set(i, i, rhCounts.get(i));
+		}
+
+		pmi = diagonalLH.multiply(obsMatrix); // Multiply by 1/N(x,*)
+		pmi = pmi.multiply(diagonalRH); // Multiply by 1/N(*,y)
+		pmi.multiply(sum_total); // Multiply by N(*,*)
+
+
+		System.out.println(pmi);
+
+	}
 
 	public void PrintObsMatrix() {
 		System.out.println(obsMatrix);
