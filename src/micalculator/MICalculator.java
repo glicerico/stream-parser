@@ -75,9 +75,7 @@ public class MICalculator {
 		SparseArray<Double> rhCounts = SparseArray.factory(Primitive64Array.FACTORY, dim).make();
 		SparseStore<Double> diagonalLH = SparseStore.PRIMITIVE.make(dim, dim);
 		SparseStore<Double> diagonalRH = SparseStore.PRIMITIVE.make(dim, dim);
-		SparseStore<Double> first_mult = SparseStore.PRIMITIVE.make(dim, dim);
 		SparseStore<Double> pmi = SparseStore.PRIMITIVE.make(dim, dim);
-		//MatrixStore<Double> pmi = MatrixStore.PRIMITIVE.makeZero(dim, dim).get();
 
 		// Get wild_card counts for words on right/left hand sides (rh/lh, respectively)
 		obsMatrix.reduceColumns(Aggregator.SUM, rhCounts); // rh: N(*, y)
@@ -93,8 +91,8 @@ public class MICalculator {
 			diagonalRH.set(i, i, 1/rhCounts.get(i));
 		}
 
-		diagonalLH.multiply(obsMatrix, first_mult); // Multiply by 1/N(x,*)
-		first_mult.multiply(diagonalRH, pmi); // Multiply by 1/N(*,y)
+		diagonalLH.multiply(obsMatrix).supplyTo(pmi); // Multiply by 1/N(x,*)
+		pmi.multiply(diagonalRH).supplyTo(pmi); // Multiply by 1/N(*,y)
 		pmi.multiply(sum_total); // Multiply by N(*,*)
 
 		System.out.println(pmi);
