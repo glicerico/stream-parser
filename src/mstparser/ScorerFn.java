@@ -3,10 +3,10 @@
 
  * Main attributes:
  * 
- * Scoring function that searches the provided HashMap
+ * Scoring function that searches the provided SparseArray
  * for the score of the two given words.
- * It determines the hash table index of the words. This allows
- * to accomodate word-pair global scores, as well as 
+ * It determines the vocabulary indexes of the words. This allows
+ * to accommodate word-pair global scores, as well as
  * sentence-specific ones.
  * THIS SCORER WORKS FOR CONTEXT-INDEPENDENT SCORES
  * 

@@ -16,12 +16,12 @@ public class RunCalculator {
 	public static void main(String[] args) {
 		System.out.println("MI Calculator!");
 
-		GetVocabulary vocabTableInstance = new GetVocabulary("src/test_files/sample_vocab.txt");
+		GetVocabulary vocabTableInstance = new GetVocabulary("data/sample_vocab.dict");
 		HashMap vocabTable = vocabTableInstance.getVocabTable();
 
 		MICalculator calculatorInstance = new MICalculator(vocabTable);
-		calculatorInstance.ObserveFile("src/test_files/sample_corpus1.txt", 3);
-		calculatorInstance.ObserveFile("src/test_files/sample_corpus2.txt", 3);
+		calculatorInstance.ObserveFile("data/sample_corpus/sample_corpus1.txt", 3);
+		calculatorInstance.ObserveFile("data/sample_corpus/sample_corpus2.txt", 3);
 
 		calculatorInstance.PrintObsMatrix();
 		calculatorInstance.CalculateExpPMI();
