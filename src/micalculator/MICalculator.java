@@ -2,9 +2,9 @@
  * 
  * Mutual Information Class.
  *
- * Calculates, stores, imports a HashMap of PMI values from a corpus.
+ * Calculates, stores, imports a HashMap of e^PMI values from a corpus.
  * PMI as defined in: https://en.wikipedia.org/wiki/Pointwise_mutual_information
- * PMI = N(x,y) * N(*,*) / N(x,*) / N(*,y)
+ * PMI = log[N(x,y) * N(*,*) / N(x,*) / N(*,y)]
  * @author		Andres Suarez, suarezandres@hotmail.com
  * @since		Sept 2019
 */
@@ -54,7 +54,7 @@ public class MICalculator {
 	private void ObserveSentence(String sentence, int window) {
 		String[] split_sent = sentence.split("\\s+");
 
-		// Observe pairs of words ocurring within window in sentence
+		// Observe pairs of words occurring within window in sentence
 		for (int i = 0; i < split_sent.length - 1; i++) {
 			if (vocabulary.containsKey(split_sent[i])) {
 				int wl_id = vocabulary.get(split_sent[i]);

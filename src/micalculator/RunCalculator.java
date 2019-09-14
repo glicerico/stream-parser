@@ -20,7 +20,8 @@ public class RunCalculator {
 		HashMap vocabTable = vocabTableInstance.getVocabTable();
 
 		MICalculator calculatorInstance = new MICalculator(vocabTable);
-		calculatorInstance.ObserveFile("src/test_files/sample_corpus.txt", 3);
+		calculatorInstance.ObserveFile("src/test_files/sample_corpus1.txt", 3);
+		calculatorInstance.ObserveFile("src/test_files/sample_corpus2.txt", 3);
 
 		calculatorInstance.PrintObsMatrix();
 		calculatorInstance.CalculateExpPMI();
