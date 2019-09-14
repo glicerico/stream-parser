@@ -36,6 +36,6 @@ public class ScorerFn {
 			curr_score = scores.get(w1_index, w2_index);
 		}
 
-		return curr_score;
+		return Math.log(curr_score); // THIS ASSUMES THAT scores obtained are e^PMI
 	}
 }
