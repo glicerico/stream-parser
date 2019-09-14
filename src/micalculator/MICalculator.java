@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+
+import org.ojalgo.array.Array1D;
 import org.ojalgo.matrix.store.SparseStore;
 import org.ojalgo.function.aggregator.Aggregator;
 import org.ojalgo.array.SparseArray;
@@ -47,7 +49,7 @@ public class MICalculator {
 		}
 	}
 
-	// Counts ordered word-pair occurences (observations) in a sentence. 
+	// Counts ordered word-pair occurrence (observations) in a sentence.
 	// Only counts pairs occurring within a given window.
 	private void ObserveSentence(String sentence, int window) {
 		String[] split_sent = sentence.split("\\s+");
@@ -68,10 +70,11 @@ public class MICalculator {
 		}
 	}
 
-	// Converts observation counts into PMI, as done by Levy, Goldberg and Dagan (Levy et al. 2015). 
-	public void CalculateMI() {
-		SparseArray<Double> lhCounts = SparseArray.factory(Primitive64Array.FACTORY, dim).make();
+	// Converts observation counts into e^PMI, as done by Levy, Goldberg and Dagan (Levy et al. 2015).
+	public void CalculateExpPMI() {
+		//SparseArray<Double> lhCounts = SparseArray.factory(Primitive64Array.FACTORY, dim).make();
 		SparseArray<Double> rhCounts = SparseArray.factory(Primitive64Array.FACTORY, dim).make();
+		Array1D<Double> lhCounts = Array1D.PRIMITIVE64.makeSparse(dim);
 		SparseStore<Double> diagonalLH = SparseStore.PRIMITIVE.make(dim, dim);
 		SparseStore<Double> diagonalRH = SparseStore.PRIMITIVE.make(dim, dim);
 		SparseStore<Double> pmi = SparseStore.PRIMITIVE.make(dim, dim);
@@ -81,8 +84,8 @@ public class MICalculator {
 		obsMatrix.reduceRows(Aggregator.SUM, lhCounts); // lh: N(x, *)
 
 		// Get total number of counts N(*,*)
-		// TODO: FIX THIS
-		double sum_total = 1;//lhCounts.Aggregatable.aggregateAll(Aggregator.SUM);
+		//double sum_total = lhCounts.nonzeros().stream().mapToDouble(nz -> nz.doubleValue()).sum();
+		double sumTotal = lhCounts.aggregateAll(Aggregator.SUM);
 
 		// Create diagonal matrices with inverted wildcard counts
 		for (int i = 0; i < dim; i++){
@@ -92,13 +95,13 @@ public class MICalculator {
 
 		diagonalLH.multiply(obsMatrix).supplyTo(pmi); // Multiply by 1/N(x,*)
 		pmi.multiply(diagonalRH).supplyTo(pmi); // Multiply by 1/N(*,y)
-		pmi.multiply(sum_total); // Multiply by N(*,*)
+		pmi.multiply(sumTotal).supplyTo(pmi); // Multiply by N(*,*)
 
 		System.out.println(pmi);
-		System.out.println(pmi.nonzeros().estimateSize());
 	}
 
 	public void PrintObsMatrix() {
+		System.out.println("Observations Matrix:");
 		System.out.println(obsMatrix);
 	}
 

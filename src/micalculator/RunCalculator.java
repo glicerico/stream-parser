@@ -23,6 +23,6 @@ public class RunCalculator {
 		calculatorInstance.ObserveFile("src/test_files/sample_corpus.txt", 3);
 
 		calculatorInstance.PrintObsMatrix();
-		calculatorInstance.CalculateMI();
+		calculatorInstance.CalculateExpPMI();
 	}
 }
