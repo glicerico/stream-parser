@@ -1,7 +1,4 @@
-/**
- * JavaDoc comments look like this. Used to describe the Class or various
- * attributes of a Class.
- * Main attributes:
+/*
  * 
  * Entry point for the MST-parser. Calls the class and executes the parser
  *
@@ -11,7 +8,6 @@
 package mstparser;
 
 import java.util.HashMap;
-import mstparser.*;
 
 public class RunParser {
 
@@ -20,7 +16,7 @@ public class RunParser {
 
 		DummyScores scoreTableInstance = new DummyScores();
 		HashMap scoreTable = scoreTableInstance.returnScoreTable();
-		GetVocabulary vocabTableInstance = new GetVocabulary("sample_vocab.txt");
+		GetVocabulary vocabTableInstance = new GetVocabulary("src/test_files/sample_vocab.txt");
 		HashMap vocabTable = vocabTableInstance.getVocabTable();
 		ScorerFn scorer = new ScorerFn(vocabTable, scoreTable);
 		MSTparser testParser = new MSTparser(scorer);
