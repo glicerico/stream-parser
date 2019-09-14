@@ -1,4 +1,4 @@
-/**
+/*
  * 
  * Entry point for the MST-parser. Calls the class and executes the parser
  *
@@ -8,7 +8,6 @@
 package mstparser;
 
 import java.util.HashMap;
-import mstparser.*;
 
 public class RunParser {
 
@@ -17,7 +16,7 @@ public class RunParser {
 
 		DummyScores scoreTableInstance = new DummyScores();
 		HashMap scoreTable = scoreTableInstance.returnScoreTable();
-		GetVocabulary vocabTableInstance = new GetVocabulary("test_files/sample_vocab.txt");
+		GetVocabulary vocabTableInstance = new GetVocabulary("src/test_files/sample_vocab.txt");
 		HashMap vocabTable = vocabTableInstance.getVocabTable();
 		ScorerFn scorer = new ScorerFn(vocabTable, scoreTable);
 		MSTparser testParser = new MSTparser(scorer);

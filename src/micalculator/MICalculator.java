@@ -1,4 +1,4 @@
-/**
+/*
  * 
  * Mutual Information Class.
  *
@@ -18,7 +18,6 @@ import org.ojalgo.matrix.store.SparseStore;
 import org.ojalgo.function.aggregator.Aggregator;
 import org.ojalgo.array.SparseArray;
 import org.ojalgo.array.Primitive64Array;
-import org.ojalgo.matrix.store.MatrixStore;
 
 public class MICalculator {
 
