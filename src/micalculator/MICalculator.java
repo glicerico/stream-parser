@@ -25,7 +25,6 @@ public class MICalculator {
 
     SparseStore<Double> obsMatrix;
 	private HashMap<String,Integer> vocabulary;
-	private HashMap<String,Float> miTable;
 	int dim; // vocabulary size
 
 	public MICalculator(HashMap vocabulary) {
@@ -71,7 +70,7 @@ public class MICalculator {
 	}
 
 	// Converts observation counts into e^PMI, as done by Levy, Goldberg and Dagan (Levy et al. 2015).
-	public void CalculateExpPMI() {
+	public SparseStore<Double> CalculateExpPMI() {
 		//SparseArray<Double> lhCounts = SparseArray.factory(Primitive64Array.FACTORY, dim).make();
 		SparseArray<Double> rhCounts = SparseArray.factory(Primitive64Array.FACTORY, dim).make();
 		Array1D<Double> lhCounts = Array1D.PRIMITIVE64.makeSparse(dim);
@@ -97,7 +96,7 @@ public class MICalculator {
 		pmi.multiply(diagonalRH).supplyTo(pmi); // Multiply by 1/N(*,y)
 		pmi.multiply(sumTotal).supplyTo(pmi); // Multiply by N(*,*)
 
-		System.out.println(pmi);
+		return pmi;
 	}
 
 	public void PrintObsMatrix() {

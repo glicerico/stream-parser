@@ -16,23 +16,24 @@
 package mstparser;
 
 import java.util.HashMap;
+import org.ojalgo.matrix.store.SparseStore;
 
 public class ScorerFn {
-	private HashMap<String,Float> scores; // structure with word-pair scores
+	private SparseStore<Double> scores; // structure with word-pair scores
 	private HashMap<String,Integer> vocabulary;
 
 	// Class constructor
-	public ScorerFn(HashMap vocab, HashMap scores) {
+	public ScorerFn(HashMap vocab, SparseStore<Double> scores) {
 		this.vocabulary = vocab;
 		this.scores = scores;
 	}
 
-	public float getScore(String w1, String w2) {
-		float curr_score = -1e10f; // bad score for words not in vocabulary
+	public double getScore(String w1, String w2) {
+		double curr_score = -1e10; // bad score for words not in vocabulary
 		if (vocabulary.containsKey(w1) && vocabulary.containsKey(w2)) {
 			int w1_index = vocabulary.get(w1);
 			int w2_index = vocabulary.get(w2);
-			curr_score = scores.get(w1_index + "_" + w2_index);
+			curr_score = scores.get(w1_index, w2_index);
 		}
 
 		return curr_score;

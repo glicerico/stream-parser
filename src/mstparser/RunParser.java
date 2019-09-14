@@ -7,6 +7,9 @@
 */
 package mstparser;
 
+import micalculator.MICalculator;
+import org.ojalgo.matrix.store.SparseStore;
+
 import java.util.HashMap;
 
 public class RunParser {
@@ -14,11 +17,15 @@ public class RunParser {
 	public static void main(String[] args) {
 		System.out.println("Stream parser!");
 
-		DummyScores scoreTableInstance = new DummyScores();
-		HashMap scoreTable = scoreTableInstance.returnScoreTable();
 		GetVocabulary vocabTableInstance = new GetVocabulary("data/sample_vocab.dict");
 		HashMap vocabTable = vocabTableInstance.getVocabTable();
-		ScorerFn scorer = new ScorerFn(vocabTable, scoreTable);
+
+		MICalculator calculatorInstance = new MICalculator(vocabTable);
+		calculatorInstance.ObserveFile("data/sample_corpus/sample_corpus1.txt", 3);
+		calculatorInstance.ObserveFile("data/sample_corpus/sample_corpus2.txt", 3);
+		SparseStore<Double> scoreMatrix = calculatorInstance.CalculateExpPMI();
+
+		ScorerFn scorer = new ScorerFn(vocabTable, scoreMatrix);
 		MSTparser testParser = new MSTparser(scorer);
 
 		testParser.parseWord("primera", 4);

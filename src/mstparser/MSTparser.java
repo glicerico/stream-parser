@@ -32,7 +32,7 @@ public class MSTparser {
 	// Define Link structure to use in parser
 	static class Link {
 		public int li, ri; // left/right indexes of link
-		public float score;
+		public double score;
 
 		// Constructor for a dummy link
 		public Link() {
@@ -40,7 +40,7 @@ public class MSTparser {
 		}
 
 		// Class constructor
-		public Link(int left_index, int right_index, float score) {
+		public Link(int left_index, int right_index, double score) {
 			this.li = left_index;
 			this.ri = right_index;
 			this.score = score;
@@ -78,7 +78,7 @@ public class MSTparser {
 			if (last != null) {
 				minlink.set(i, getMinLink(last, minlink.get(last.ri)));
 			}
-			float curr_score = scorer.getScore(proc_sentence.get(i), proc_sentence.get(word_num - 1));
+			double curr_score = scorer.getScore(proc_sentence.get(i), proc_sentence.get(word_num - 1));
 			if (
 			  (curr_score > 0) 
 			  && (curr_score > getLinkScore(minlink.get(i)))
@@ -95,13 +95,13 @@ public class MSTparser {
 
 	}
 
-	private float getLinkScore(Link this_link) {
+	private double getLinkScore(Link this_link) {
 		return this_link.score;
 	}
 
 	// Return the highest score from the stack, or 0 if it's empty
-	private float getStackMaxScore() {
-		float curr_max = 0;
+	private double getStackMaxScore() {
+		double curr_max = 0;
 		for (Link curr_link : stack) {
 			if (curr_link.score > curr_max) {
 				curr_max = curr_link.score;
