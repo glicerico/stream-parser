@@ -75,30 +75,30 @@ public class MICalculator {
 		SparseArray<Double> rhCounts = SparseArray.factory(Primitive64Array.FACTORY, dim).make();
 		SparseStore<Double> diagonalLH = SparseStore.PRIMITIVE.make(dim, dim);
 		SparseStore<Double> diagonalRH = SparseStore.PRIMITIVE.make(dim, dim);
-		MatrixStore<Double> pmi = MatrixStore.PRIMITIVE.makeZero(dim, dim).get();
+		SparseStore<Double> first_mult = SparseStore.PRIMITIVE.make(dim, dim);
+		SparseStore<Double> pmi = SparseStore.PRIMITIVE.make(dim, dim);
+		//MatrixStore<Double> pmi = MatrixStore.PRIMITIVE.makeZero(dim, dim).get();
 
 		// Get wild_card counts for words on right/left hand sides (rh/lh, respectively)
 		obsMatrix.reduceColumns(Aggregator.SUM, rhCounts); // rh: N(*, y)
 		obsMatrix.reduceRows(Aggregator.SUM, lhCounts); // lh: N(x, *)
 
 		// Get total number of counts N(*,*)
+		// TODO: FIX THIS
 		double sum_total = 1;//lhCounts.Aggregatable.aggregateAll(Aggregator.SUM);
 
-		// Invert rh and lh counts
-
-		// Create diagonal matrices with wildcard counts
+		// Create diagonal matrices with inverted wildcard counts
 		for (int i = 0; i < dim; i++){
-			diagonalLH.set(i, i, lhCounts.get(i));
-			diagonalRH.set(i, i, rhCounts.get(i));
+			diagonalLH.set(i, i, 1/lhCounts.get(i));
+			diagonalRH.set(i, i, 1/rhCounts.get(i));
 		}
 
-		pmi = diagonalLH.multiply(obsMatrix); // Multiply by 1/N(x,*)
-		pmi = pmi.multiply(diagonalRH); // Multiply by 1/N(*,y)
+		diagonalLH.multiply(obsMatrix, first_mult); // Multiply by 1/N(x,*)
+		first_mult.multiply(diagonalRH, pmi); // Multiply by 1/N(*,y)
 		pmi.multiply(sum_total); // Multiply by N(*,*)
 
-
 		System.out.println(pmi);
-
+		System.out.println(pmi.nonzeros().estimateSize());
 	}
 
 	public void PrintObsMatrix() {
