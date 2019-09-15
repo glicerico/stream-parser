@@ -33,9 +33,19 @@ public class MICalculator {
 		obsMatrix = SparseStore.PRIMITIVE.make(dim, dim);
 	}
 
-	public void ObserveFile(String text_file, int window) {
+	public void ObserveDirectory(final File folder, int window) {
+		for (final File fileEntry : folder.listFiles()) {
+			if (fileEntry.isDirectory()) {
+				ObserveDirectory(fileEntry, window);
+			} else {
+				ObserveFile(fileEntry, window);
+			}
+		}
+	}
+
+	public void ObserveFile(final File text_file, int window) {
 		try {
-			Scanner scanner = new Scanner(new File(text_file));
+			Scanner scanner = new Scanner(text_file);
 			while (scanner.hasNextLine()) {
 				String currLine = scanner.nextLine();
 				if (!currLine.trim().equals("")) { // Skip empty lines
