@@ -38,5 +38,8 @@ public class RunParser {
 		testParser.printParse();
 		testParser.parseWord("quinta", 4);
 		testParser.printParse();
+
+		testParser.parseSentence("primera segunda segunda", 3);
+		testParser.printParse();
 	}
 }
