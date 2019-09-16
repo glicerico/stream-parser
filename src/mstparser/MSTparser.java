@@ -29,34 +29,16 @@ public class MSTparser {
 		proc_sentence = new ArrayList<String>();
 	}
 
-	// Define Link structure to use in parser
-	static class Link {
-		public int li, ri; // left/right indexes of link
-		public double score;
-
-		// Constructor for a dummy link
-		public Link() {
-			this(0, 0, 0);
-		}
-
-		// Class constructor
-		public Link(int left_index, int right_index, double score) {
-			this.li = left_index;
-			this.ri = right_index;
-			this.score = score;
-		}
-
-		@Override
-		public String toString() {
-			return "(" + this.li + "-" + this.ri + ", " + this.score + ")";
-		}
-	}
-
 	// Class constructor
 	public MSTparser(ScorerFn scorer) {
 		PrepareNewSentence();
 		this.scorer = scorer;
 	}
+
+	// TODO: parseSentence method;
+	// TODO: export parse method;
+	// TODO: parseFile method?;
+	// TODO: parseCorpus method?;
 
 	// Adds one word to the current parsed sentence if other words have been
 	// processed. If this is the first word in parse, it just gets added to
