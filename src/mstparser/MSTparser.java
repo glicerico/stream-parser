@@ -25,7 +25,7 @@ public class MSTparser {
 	private ArrayList<Link> stack;
 	private ArrayList<Link> minlink; // stores min valued Links
 	private ArrayList<Link> links;
-	private ArrayList<String> proc_sentence;
+	private ArrayList<String> procSentence;
 	private ScorerFn scorer;
 
 	// Class constructor
@@ -39,7 +39,7 @@ public class MSTparser {
 		stack = new ArrayList<Link>();
 		minlink = new ArrayList<Link>();
 		links = new ArrayList<Link>();
-		proc_sentence = new ArrayList<String>();
+		procSentence = new ArrayList<String>();
 	}
 
 	// Process folder with text files (corpus), sending one file to parseFile at a time
@@ -92,9 +92,9 @@ public class MSTparser {
 	// Adds one word to the current parsed sentence if other words have been
 	// processed. If this is the first word in parse, it just gets added to
 	// the processed sentence.
-	public void parseWord(String word, int window) { //TODO: include window
-		proc_sentence.add(word);
-		int word_num = proc_sentence.size();
+    private void parseWord(String word, int window) { //TODO: include window
+		procSentence.add(word);
+		int word_num = procSentence.size();
 
 		// if this is the first word parsed, just add it to proc_sentece
 		if (word_num < 2) { // initialize sentence elsewhere to remove this conditional??
@@ -109,15 +109,15 @@ public class MSTparser {
 			if (last != null) {
 				minlink.set(i, getMinLink(last, minlink.get(last.ri)));
 			}
-			double curr_score = scorer.getScore(proc_sentence.get(i), proc_sentence.get(word_num - 1));
+			double currScore = scorer.getScore(procSentence.get(i), procSentence.get(word_num - 1));
 			if (
-			  (curr_score > 0) 
-			  && (curr_score > getLinkScore(minlink.get(i)))
-			  && (curr_score > getStackMaxScore())) {
+			  (currScore > 0)
+			  && (currScore > getLinkScore(minlink.get(i)))
+			  && (currScore > getStackMaxScore())) {
 				stack.forEach(stack_link->unLink(stack_link)); // unlink weakest crossing links
 				stack = new ArrayList<Link>();
 				unLink(minlink.get(i)); // unlink weakest link in loop
-				Link new_link = new Link(i, word_num - 1, curr_score);
+				Link new_link = new Link(i, word_num - 1, currScore);
 				minlink.set(i, new_link); // assign weakest link from i to word
 				links.add(new_link);
 			}
@@ -188,7 +188,8 @@ public class MSTparser {
         try {
 			// If the file doesn't exists, create and write to it
 			// If the file exists, truncate (remove all content) and write to it
-            String block = proc_sentence.toString() + "\n" + links.toString() + "\n";
+			String textSentence = String.join(" ", procSentence);
+            String block = textSentence + "\n" + links2ULL() + "\n";
             Files.write(Paths.get(parseFilename), block.getBytes(),
 					StandardOpenOption.CREATE, StandardOpenOption.APPEND);
         } catch (IOException x) {
@@ -196,10 +197,24 @@ public class MSTparser {
         }
 	}
 
+	// Converts links structure to ull format
+	private String links2ULL() {
+		String linksULL = "";
+		for (Link currLink : links) {
+			String wl = procSentence.get(currLink.li);
+			String wr = procSentence.get(currLink.ri);
+			String textScore = String.valueOf(currLink.score);
+			linksULL += String.join(" ", String.valueOf(currLink.li), wl,
+					String.valueOf(currLink.ri), wr, textScore);
+			linksULL += "\n";
+		}
+		return linksULL;
+	}
+
 	// Prints the current sentence and its parse
 	public void printParse() {
 		System.out.println("Current parse:");
-		System.out.println(proc_sentence.toString());
+		System.out.println(procSentence.toString());
 		System.out.println(links.toString());
 	}
 }
