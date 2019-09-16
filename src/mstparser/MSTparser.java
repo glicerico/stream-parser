@@ -40,6 +40,15 @@ public class MSTparser {
 	// TODO: parseFile method?;
 	// TODO: parseCorpus method?;
 
+    // Processes sentence, sending word by word to parseWord
+	public void parseSentence(String sentence, int window) {
+		if (!sentence.trim().equals("")) { // Skip empty lines
+			for(String currWord : sentence.split("\\s+")){
+				parseWord(currWord, window);
+			}
+		}
+	}
+
 	// Adds one word to the current parsed sentence if other words have been
 	// processed. If this is the first word in parse, it just gets added to
 	// the processed sentence.
