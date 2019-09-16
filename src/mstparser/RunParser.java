@@ -29,21 +29,8 @@ public class RunParser {
 		ScorerFn scorer = new ScorerFn(vocabTable, scoreMatrix);
 		MSTparser testParser = new MSTparser(scorer);
 
-		testParser.parseWord("primera", 4);
-		testParser.printParse();
-		testParser.parseWord("segunda", 4);
-		testParser.printParse();
-		testParser.parseWord("tercera", 4);
-		testParser.printParse();
-		testParser.parseWord("cuarta", 4);
-		testParser.printParse();
-		testParser.parseWord("quinta", 4);
-		testParser.printParse();
+		testParser.parseFile("data/sample_corpus/sample_corpus1.txt", 3, "trash");
 
-		testParser.parseSentence("primera segunda segunda", 3);
-		testParser.printParse();
-		testParser.exportParse("trash/test.ull");
-
-		testParser.parseFile("data/sample_corpus/sample_corpus1.txt", 3, "trash/test2.ull");
+		testParser.parseCorpus("data/sample_corpus", 3, "trash");
 	}
 }

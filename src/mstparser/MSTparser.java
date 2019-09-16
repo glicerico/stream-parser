@@ -42,18 +42,34 @@ public class MSTparser {
 		proc_sentence = new ArrayList<String>();
 	}
 
-	// TODO: parseCorpus method?;
+	// Process folder with text files (corpus), sending one file to parseFile at a time
+	public void parseCorpus(String corpusFolderPath, int window, String parseFolderPath) throws IOException {
+		File corpusFolder = new File(corpusFolderPath);
+		for (final File fileEntry : corpusFolder.listFiles()) {
+			String fileEntryPath = fileEntry.getPath();
+			if (fileEntry.isDirectory()) {
+				parseCorpus(fileEntryPath, window, parseFolderPath);
+			} else {
+				parseFile(fileEntryPath, window, parseFolderPath);
+			}
+		}
+	}
 
 	// Process file, sending sentence by sentence to parseSentence and exporting to file
-    public void parseFile(String textFilename, int window, String parseFilename) throws IOException {
-		Files.deleteIfExists(Paths.get(parseFilename)); // Reset parseFile
+    public void parseFile(String textFilePath, int window, String parseFolderPath) throws IOException {
+		if (!Files.exists(Paths.get(parseFolderPath))) {
+			Files.createDirectory(Paths.get(parseFolderPath)); // Create parseFolder if doesn't exist
+		}
 		try {
-			Scanner scanner = new Scanner(new File(textFilename));
+		    File textFile = new File(textFilePath);
+			Scanner scanner = new Scanner(textFile);
+			String parseFilePath = parseFolderPath + "/" + textFile.getName() + ".ull";
+			Files.deleteIfExists(Paths.get(parseFilePath)); // Reset parseFile
 			while (scanner.hasNextLine()) {
 				String currLine = scanner.nextLine();
 				if (!currLine.trim().equals("")) { // Skip empty lines
 					parseSentence(currLine, window);
-					exportParse(parseFilename);
+					exportParse(parseFilePath);
 				}
 			}
 			scanner.close();
@@ -61,7 +77,6 @@ public class MSTparser {
 			e.printStackTrace();
 		}
 	}
-
 
     // Processes sentence, sending word by word to parseWord
 	public void parseSentence(String sentence, int window) {
@@ -73,6 +88,7 @@ public class MSTparser {
 		}
 	}
 
+	// This is the actual parser algorithm at work, for one word.
 	// Adds one word to the current parsed sentence if other words have been
 	// processed. If this is the first word in parse, it just gets added to
 	// the processed sentence.
@@ -122,7 +138,6 @@ public class MSTparser {
 				curr_max = curr_link.score;
 			}
 		}
-
 		return curr_max;
 	}
 
@@ -169,7 +184,7 @@ public class MSTparser {
 	}
 
 	// Adds the current sentence and its parse to file
-	public void exportParse(String parseFilename) {
+	private void exportParse(String parseFilename) {
         try {
 			// If the file doesn't exists, create and write to it
 			// If the file exists, truncate (remove all content) and write to it
@@ -179,7 +194,6 @@ public class MSTparser {
         } catch (IOException x) {
             System.err.format("IOException: %s%n", x);
         }
-
 	}
 
 	// Prints the current sentence and its parse
