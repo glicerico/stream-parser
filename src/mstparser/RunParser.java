@@ -11,11 +11,12 @@ import micalculator.MICalculator;
 import org.ojalgo.matrix.store.SparseStore;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 
 public class RunParser {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		System.out.println("Stream parser!");
 
 		GetVocabulary vocabTableInstance = new GetVocabulary("data/sample_vocab.dict");
@@ -41,6 +42,8 @@ public class RunParser {
 
 		testParser.parseSentence("primera segunda segunda", 3);
 		testParser.printParse();
-		testParser.exportParse("test.ull");
+		testParser.exportParse("trash/test.ull");
+
+		testParser.parseFile("data/sample_corpus/sample_corpus1.txt", 3, "trash/test2.ull");
 	}
 }

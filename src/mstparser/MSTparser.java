@@ -10,13 +10,14 @@
 */
 package mstparser;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class MSTparser {
 
@@ -24,7 +25,7 @@ public class MSTparser {
 	private ArrayList<Link> stack;
 	private ArrayList<Link> minlink; // stores min valued Links
 	private ArrayList<Link> links;
-	private ArrayList<String> procSentence;
+	private ArrayList<String> proc_sentence;
 	private ScorerFn scorer;
 
 	// Class constructor
@@ -38,11 +39,29 @@ public class MSTparser {
 		stack = new ArrayList<Link>();
 		minlink = new ArrayList<Link>();
 		links = new ArrayList<Link>();
-		procSentence = new ArrayList<String>();
+		proc_sentence = new ArrayList<String>();
 	}
 
-	// TODO: parseFile method?;
 	// TODO: parseCorpus method?;
+
+	// Process file, sending sentence by sentence to parseSentence and exporting to file
+    public void parseFile(String textFilename, int window, String parseFilename) throws IOException {
+		Files.deleteIfExists(Paths.get(parseFilename)); // Reset parseFile
+		try {
+			Scanner scanner = new Scanner(new File(textFilename));
+			while (scanner.hasNextLine()) {
+				String currLine = scanner.nextLine();
+				if (!currLine.trim().equals("")) { // Skip empty lines
+					parseSentence(currLine, window);
+					exportParse(parseFilename);
+				}
+			}
+			scanner.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+
 
     // Processes sentence, sending word by word to parseWord
 	public void parseSentence(String sentence, int window) {
@@ -58,8 +77,8 @@ public class MSTparser {
 	// processed. If this is the first word in parse, it just gets added to
 	// the processed sentence.
 	public void parseWord(String word, int window) { //TODO: include window
-		procSentence.add(word);
-		int word_num = procSentence.size();
+		proc_sentence.add(word);
+		int word_num = proc_sentence.size();
 
 		// if this is the first word parsed, just add it to proc_sentece
 		if (word_num < 2) { // initialize sentence elsewhere to remove this conditional??
@@ -74,7 +93,7 @@ public class MSTparser {
 			if (last != null) {
 				minlink.set(i, getMinLink(last, minlink.get(last.ri)));
 			}
-			double curr_score = scorer.getScore(procSentence.get(i), procSentence.get(word_num - 1));
+			double curr_score = scorer.getScore(proc_sentence.get(i), proc_sentence.get(word_num - 1));
 			if (
 			  (curr_score > 0) 
 			  && (curr_score > getLinkScore(minlink.get(i)))
@@ -154,7 +173,7 @@ public class MSTparser {
         try {
 			// If the file doesn't exists, create and write to it
 			// If the file exists, truncate (remove all content) and write to it
-            String block = procSentence.toString() + "\n" + links.toString() + "\n";
+            String block = proc_sentence.toString() + "\n" + links.toString() + "\n";
             Files.write(Paths.get(parseFilename), block.getBytes(),
 					StandardOpenOption.CREATE, StandardOpenOption.APPEND);
         } catch (IOException x) {
@@ -166,7 +185,7 @@ public class MSTparser {
 	// Prints the current sentence and its parse
 	public void printParse() {
 		System.out.println("Current parse:");
-		System.out.println(procSentence.toString());
+		System.out.println(proc_sentence.toString());
 		System.out.println(links.toString());
 	}
 }
