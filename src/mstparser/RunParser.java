@@ -41,5 +41,6 @@ public class RunParser {
 
 		testParser.parseSentence("primera segunda segunda", 3);
 		testParser.printParse();
+		testParser.exportParse("test.ull");
 	}
 }
