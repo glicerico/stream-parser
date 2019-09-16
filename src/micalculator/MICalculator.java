@@ -23,11 +23,11 @@ import org.ojalgo.array.Primitive64Array;
 
 public class MICalculator {
 
-    SparseStore<Double> obsMatrix;
+    private SparseStore<Double> obsMatrix;
 	private HashMap<String,Integer> vocabulary;
-	int dim; // vocabulary size
+	private int dim; // vocabulary size
 
-	public MICalculator(HashMap vocabulary) {
+	public MICalculator(HashMap<String,Integer> vocabulary) {
 		this.vocabulary = vocabulary;
 		dim = vocabulary.size();
 		obsMatrix = SparseStore.PRIMITIVE.make(dim, dim);
@@ -109,7 +109,7 @@ public class MICalculator {
 		return pmi;
 	}
 
-	public void PrintObsMatrix() {
+	void PrintObsMatrix() {
 		System.out.println("Observations Matrix:");
 		System.out.println(obsMatrix);
 	}
