@@ -21,18 +21,18 @@ public class MSTparser {
 	private ArrayList<String> proc_sentence;
 	private ScorerFn scorer;
 
+	// Class constructor
+	public MSTparser(ScorerFn scorer) {
+		PrepareNewSentence();
+		this.scorer = scorer;
+	}
+
 	// Resets structures, ready to parse a new sentence
 	public void PrepareNewSentence() {
 		stack = new ArrayList<Link>();
 		minlink = new ArrayList<Link>();
 		links = new ArrayList<Link>();
 		proc_sentence = new ArrayList<String>();
-	}
-
-	// Class constructor
-	public MSTparser(ScorerFn scorer) {
-		PrepareNewSentence();
-		this.scorer = scorer;
 	}
 
 	// TODO: parseSentence method;
@@ -42,6 +42,7 @@ public class MSTparser {
 
     // Processes sentence, sending word by word to parseWord
 	public void parseSentence(String sentence, int window) {
+		PrepareNewSentence(); // Reset data from previous sentence
 		if (!sentence.trim().equals("")) { // Skip empty lines
 			for(String currWord : sentence.split("\\s+")){
 				parseWord(currWord, window);
