@@ -19,7 +19,7 @@ public class RunParser {
 		System.out.println("Stream parser!");
 
 		GetVocabulary vocabTableInstance = new GetVocabulary("data/sample_vocab.dict");
-		HashMap vocabTable = vocabTableInstance.getVocabTable();
+		HashMap<String,Integer> vocabTable = vocabTableInstance.getVocabTable();
 
 		MICalculator calculatorInstance = new MICalculator(vocabTable);
 		calculatorInstance.ObserveDirectory(new File("data/sample_corpus/"), 3);

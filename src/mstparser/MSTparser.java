@@ -1,4 +1,4 @@
-/**
+/*
  * MSTparser class
 
  * Main attributes:
@@ -35,7 +35,6 @@ public class MSTparser {
 		proc_sentence = new ArrayList<String>();
 	}
 
-	// TODO: parseSentence method;
 	// TODO: export parse method;
 	// TODO: parseFile method?;
 	// TODO: parseCorpus method?;
