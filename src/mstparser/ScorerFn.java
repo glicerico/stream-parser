@@ -1,15 +1,15 @@
-/**
+/*
  * ScorerFn class
 
  * Main attributes:
- * 
+ *
  * Scoring function that searches the provided SparseArray
  * for the score of the two given words.
  * It determines the vocabulary indexes of the words. This allows
  * to accommodate word-pair global scores, as well as
  * sentence-specific ones.
  * THIS SCORER WORKS FOR CONTEXT-INDEPENDENT SCORES
- * 
+ *
  * @author		Andres Suarez, suarezandres@hotmail.com
  * @since		Sept 2019
 */
@@ -23,12 +23,12 @@ public class ScorerFn {
 	private HashMap<String,Integer> vocabulary;
 
 	// Class constructor
-	public ScorerFn(HashMap vocab, SparseStore<Double> scores) {
+	public ScorerFn(HashMap<String,Integer> vocab, SparseStore<Double> scores) {
 		this.vocabulary = vocab;
 		this.scores = scores;
 	}
 
-	public double getScore(String w1, String w2) {
+	double getScore(String w1, String w2) {
 		double curr_score = -1e10; // bad score for words not in vocabulary
 		if (vocabulary.containsKey(w1) && vocabulary.containsKey(w2)) {
 			int w1_index = vocabulary.get(w1);
