@@ -26,6 +26,7 @@ public class MICalculator {
     private SparseStore<Double> obsMatrix;
 	private HashMap<String,Integer> vocabulary;
 	private int dim; // vocabulary size
+    private int fileCount;
 
 	public MICalculator(HashMap<String,Integer> vocabulary) {
 		this.vocabulary = vocabulary;
@@ -34,6 +35,7 @@ public class MICalculator {
 	}
 
 	public void ObserveDirectory(final File folder, int window) {
+		fileCount = 0;
 		for (final File fileEntry : folder.listFiles()) {
 			if (fileEntry.isDirectory()) {
 				ObserveDirectory(fileEntry, window);
@@ -45,7 +47,7 @@ public class MICalculator {
 
 	public void ObserveFile(final File textFile, int window) {
 		try {
-			System.out.println("Observing file: " + textFile.getName());
+			System.out.println("Observing file #" + ++fileCount + ": " + textFile.getName());
 			Scanner scanner = new Scanner(textFile);
 			while (scanner.hasNextLine()) {
 				String currLine = scanner.nextLine();
