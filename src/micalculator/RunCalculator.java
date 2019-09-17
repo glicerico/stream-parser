@@ -9,6 +9,8 @@
 package micalculator;
 
 import mstparser.*;
+
+import java.io.File;
 import java.util.HashMap;
 
 public class RunCalculator {
@@ -16,12 +18,11 @@ public class RunCalculator {
 	public static void main(String[] args) {
 		System.out.println("MI Calculator!");
 
-		GetVocabulary vocabTableInstance = new GetVocabulary("src/test_files/sample_vocab.txt");
+		GetVocabulary vocabTableInstance = new GetVocabulary("data/sample_vocab.dict");
 		HashMap vocabTable = vocabTableInstance.getVocabTable();
 
 		MICalculator calculatorInstance = new MICalculator(vocabTable);
-		calculatorInstance.ObserveFile("src/test_files/sample_corpus1.txt", 3);
-		calculatorInstance.ObserveFile("src/test_files/sample_corpus2.txt", 3);
+		calculatorInstance.ObserveDirectory(new File("data/sample_corpus/"), 3);
 
 		calculatorInstance.PrintObsMatrix();
 		calculatorInstance.CalculateExpPMI();

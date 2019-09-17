@@ -1,4 +1,4 @@
-/**
+/*
  * GetVocabulary class
 
  * Main attributes:
@@ -19,10 +19,11 @@ import java.util.Scanner;
 
 public class GetVocabulary {
 
-	HashMap<String, Integer> vocabularyTable = new HashMap<String, Integer>();
+	private HashMap<String,Integer> vocabularyTable;
 
 	// The constructor opens the file and builds the hashmap from it
 	public GetVocabulary(String vocab_file) {
+		vocabularyTable = new HashMap<>();
 		try {
 			Scanner scanner = new Scanner(new File(vocab_file));
 			int index = 0;

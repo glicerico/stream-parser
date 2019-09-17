@@ -7,29 +7,38 @@
 */
 package mstparser;
 
+import micalculator.MICalculator;
+import org.ojalgo.matrix.store.SparseStore;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 
 public class RunParser {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
+		int window = 6;
+
 		System.out.println("Stream parser!");
 
-		DummyScores scoreTableInstance = new DummyScores();
-		HashMap scoreTable = scoreTableInstance.returnScoreTable();
-		GetVocabulary vocabTableInstance = new GetVocabulary("src/test_files/sample_vocab.txt");
-		HashMap vocabTable = vocabTableInstance.getVocabTable();
-		ScorerFn scorer = new ScorerFn(vocabTable, scoreTable);
+		//GetVocabulary vocabTableInstance = new GetVocabulary("data/EnglishPOC/EnglishPOC.dict");
+		System.out.println("Reading vocabulary...");
+		GetVocabulary vocabTableInstance = new GetVocabulary("data/GC/GC.dict");
+		HashMap<String,Integer> vocabTable = vocabTableInstance.getVocabTable();
+
+		System.out.println("Calculating MI...");
+		MICalculator calculatorInstance = new MICalculator(vocabTable);
+		calculatorInstance.ObserveDirectory(new File("data/GC/MSL25-2019JUL01"), window);
+		SparseStore<Double> scoreMatrix = calculatorInstance.CalculateExpPMI();
+
+		System.out.println("Creating score function...");
+		ScorerFn scorer = new ScorerFn(vocabTable, scoreMatrix);
 		MSTparser testParser = new MSTparser(scorer);
 
-		testParser.parseWord("primera", 4);
-		testParser.printParse();
-		testParser.parseWord("segunda", 4);
-		testParser.printParse();
-		testParser.parseWord("tercera", 4);
-		testParser.printParse();
-		testParser.parseWord("cuarta", 4);
-		testParser.printParse();
-		testParser.parseWord("quinta", 4);
-		testParser.printParse();
+		System.out.println("Parsing corpus...");
+		//testParser.parseCorpus("data/sample_corpus", window, "trash");
+		testParser.parseCorpus("data/GC/MSL25-2019JUL01", window, "data/GC/parses");
+
+		System.out.println("DONE!");
 	}
 }
