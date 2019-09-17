@@ -206,8 +206,10 @@ public class MSTparser {
 			String wl = procSentence.get(currLink.getLi());
 			String wr = procSentence.get(currLink.getRi());
 			String textScore = String.valueOf(currLink.getScore());
-			linksULL += String.join(" ", String.valueOf(currLink.getLi()), wl,
-					String.valueOf(currLink.getRi()), wr, textScore);
+			// Here, we add one to the currLink sentence positions to have 1-based positions,
+			// as the ULL format
+			linksULL += String.join(" ", String.valueOf(currLink.getLi() + 1), wl,
+					String.valueOf(currLink.getRi() + 1), wr, textScore);
 			linksULL += "\n";
 		}
 		return linksULL;

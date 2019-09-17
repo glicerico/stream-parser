@@ -43,9 +43,10 @@ public class MICalculator {
 		}
 	}
 
-	public void ObserveFile(final File text_file, int window) {
+	public void ObserveFile(final File textFile, int window) {
 		try {
-			Scanner scanner = new Scanner(text_file);
+			System.out.println("Observing file: " + textFile.getName());
+			Scanner scanner = new Scanner(textFile);
 			while (scanner.hasNextLine()) {
 				String currLine = scanner.nextLine();
 				if (!currLine.trim().equals("")) { // Skip empty lines
@@ -61,18 +62,18 @@ public class MICalculator {
 	// Counts ordered word-pair occurrence (observations) in a sentence.
 	// Only counts pairs occurring within a given window.
 	private void ObserveSentence(String sentence, int window) {
-		String[] split_sent = sentence.split("\\s+");
+		String[] splitSent = sentence.split("\\s+");
 
 		// Observe pairs of words occurring within window in sentence
-		for (int i = 0; i < split_sent.length - 1; i++) {
-			if (vocabulary.containsKey(split_sent[i])) {
-				int wl_id = vocabulary.get(split_sent[i]);
-				int win_edge = Math.min(i + window, split_sent.length - 1);
+		for (int i = 0; i < splitSent.length - 1; i++) {
+			if (vocabulary.containsKey(splitSent[i])) {
+				int wl_id = vocabulary.get(splitSent[i]);
+				int win_edge = Math.min(i + window, splitSent.length - 1);
 				for (int j = i + 1; j <= win_edge; j++) {
-					if (vocabulary.containsKey(split_sent[j])) {
-						int wr_id = vocabulary.get(split_sent[j]);
-						Double curr_count = obsMatrix.get(wl_id, wr_id);
-						obsMatrix.set(wl_id, wr_id, ++curr_count); // TODO: other counting weights?
+					if (vocabulary.containsKey(splitSent[j])) {
+						int wr_id = vocabulary.get(splitSent[j]);
+						Double currCount = obsMatrix.get(wl_id, wr_id);
+						obsMatrix.set(wl_id, wr_id, ++currCount); // TODO: other counting weights?
 					}
 				}
 			}

@@ -17,20 +17,28 @@ import java.util.HashMap;
 public class RunParser {
 
 	public static void main(String[] args) throws IOException {
+		int window = 6;
+
 		System.out.println("Stream parser!");
 
-		GetVocabulary vocabTableInstance = new GetVocabulary("data/sample_vocab.dict");
+		//GetVocabulary vocabTableInstance = new GetVocabulary("data/EnglishPOC/EnglishPOC.dict");
+		System.out.println("Reading vocabulary...");
+		GetVocabulary vocabTableInstance = new GetVocabulary("data/GC/GC.dict");
 		HashMap<String,Integer> vocabTable = vocabTableInstance.getVocabTable();
 
+		System.out.println("Calculating MI...");
 		MICalculator calculatorInstance = new MICalculator(vocabTable);
-		calculatorInstance.ObserveDirectory(new File("data/sample_corpus/"), 3);
+		calculatorInstance.ObserveDirectory(new File("data/GC/MSL25-2019JUL01"), window);
 		SparseStore<Double> scoreMatrix = calculatorInstance.CalculateExpPMI();
 
+		System.out.println("Creating score function...");
 		ScorerFn scorer = new ScorerFn(vocabTable, scoreMatrix);
 		MSTparser testParser = new MSTparser(scorer);
 
-		testParser.parseFile("data/sample_corpus/sample_corpus1.txt", 3, "trash");
+		System.out.println("Parsing corpus...");
+		//testParser.parseCorpus("data/sample_corpus", window, "trash");
+		testParser.parseCorpus("data/GC/MSL25-2019JUL01", window, "data/GC/parses");
 
-		testParser.parseCorpus("data/sample_corpus", 3, "trash");
+		System.out.println("DONE!");
 	}
 }
