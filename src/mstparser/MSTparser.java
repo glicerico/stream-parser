@@ -107,14 +107,14 @@ public class MSTparser {
 		for (int i = word_num - 2; i >= 0 ; i--) {
 			Link last = popRightLinks(i);
 			if (last != null) {
-				minlink.set(i, getMinLink(last, minlink.get(last.ri)));
+				minlink.set(i, getMinLink(last, minlink.get(last.getRi())));
 			}
 			double currScore = scorer.getScore(procSentence.get(i), procSentence.get(word_num - 1));
 			if (
 			  (currScore > 0)
 			  && (currScore > getLinkScore(minlink.get(i)))
 			  && (currScore > getStackMaxScore())) {
-				stack.forEach(stack_link->unLink(stack_link)); // unlink weakest crossing links
+				stack.forEach(this::unLink); // unlink weakest crossing links
 				stack = new ArrayList<Link>();
 				unLink(minlink.get(i)); // unlink weakest link in loop
 				Link new_link = new Link(i, word_num - 1, currScore);
@@ -127,15 +127,15 @@ public class MSTparser {
 	}
 
 	private double getLinkScore(Link this_link) {
-		return this_link.score;
+		return this_link.getScore();
 	}
 
 	// Return the highest score from the stack, or 0 if it's empty
 	private double getStackMaxScore() {
 		double curr_max = 0;
 		for (Link curr_link : stack) {
-			if (curr_link.score > curr_max) {
-				curr_max = curr_link.score;
+			if (curr_link.getScore() > curr_max) {
+				curr_max = curr_link.getScore();
 			}
 		}
 		return curr_max;
@@ -158,7 +158,7 @@ public class MSTparser {
 		if (stack.size() > 0) {
 			for (int j = stack.size() - 1; j >= 0; j--) {
 				Link curr_link = stack.get(j);
-				if (curr_link.li == index) {
+				if (curr_link.getLi() == index) {
 					result = curr_link;
 					stack.remove(j);
 				}
@@ -172,15 +172,15 @@ public class MSTparser {
 	// it is done here from left to right in the current link list.
 	private void pushLeftLinks(int index) {
 		links.forEach(link->{
-			if(index == link.ri){
+			if(index == link.getRi()){
 				stack.add(link);
 			}
 		});
 	}
 
-	// Given two links, returns the one with minumum score
+	// Given two links, returns the one with minimum score
 	private Link getMinLink(Link l1, Link l2) {
-		return (l1.score >= l2.score) ? l2 : l1;
+		return (l1.getScore() >= l2.getScore()) ? l2 : l1;
 	}
 
 	// Adds the current sentence and its parse to file
@@ -199,13 +199,15 @@ public class MSTparser {
 
 	// Converts links structure to ull format
 	private String links2ULL() {
+		LinkSorter linkSorter = new LinkSorter(links);
+		ArrayList<Link> sortedLinks = linkSorter.getSortedLinkByPosition();
 		String linksULL = "";
-		for (Link currLink : links) {
-			String wl = procSentence.get(currLink.li);
-			String wr = procSentence.get(currLink.ri);
-			String textScore = String.valueOf(currLink.score);
-			linksULL += String.join(" ", String.valueOf(currLink.li), wl,
-					String.valueOf(currLink.ri), wr, textScore);
+		for (Link currLink : sortedLinks) {
+			String wl = procSentence.get(currLink.getLi());
+			String wr = procSentence.get(currLink.getRi());
+			String textScore = String.valueOf(currLink.getScore());
+			linksULL += String.join(" ", String.valueOf(currLink.getLi()), wl,
+					String.valueOf(currLink.getRi()), wr, textScore);
 			linksULL += "\n";
 		}
 		return linksULL;

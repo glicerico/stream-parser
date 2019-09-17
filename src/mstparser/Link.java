@@ -10,9 +10,11 @@
  */
 package mstparser;
 
+import java.util.Comparator;
+
 public class Link {
-    int li, ri; // left/right indexes of link
-    double score;
+    private int li, ri; // left/right indexes of link
+    private double score;
 
     // Constructor for a dummy link
     Link() {
@@ -25,6 +27,34 @@ public class Link {
         this.ri = right_index;
         this.score = score;
     }
+
+    int getLi() {
+        return li;
+    }
+
+    int getRi() {
+        return ri;
+    }
+
+    double getScore() {
+        return score;
+    }
+
+    // Ascending order
+    public static Comparator<Link> positionComparator = new Comparator<Link>() {
+        @Override
+        public int compare(Link l1, Link l2) {
+            return (-Integer.compare(l2.getLi(), l1.getLi())); // Negative symbol: ascending order
+        }
+    };
+
+    // Descending order
+    public static Comparator<Link> scoreComparator = new Comparator<Link>() {
+        @Override
+        public int compare(Link l1, Link l2) {
+            return (Double.compare(l2.getScore(), l1.getScore()));
+        }
+    };
 
     @Override
     public String toString() {
