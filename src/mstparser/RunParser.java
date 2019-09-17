@@ -21,23 +21,25 @@ public class RunParser {
 
 		System.out.println("Stream parser!");
 
-		//GetVocabulary vocabTableInstance = new GetVocabulary("data/EnglishPOC/EnglishPOC.dict");
 		System.out.println("Reading vocabulary...");
-		GetVocabulary vocabTableInstance = new GetVocabulary("data/GC/GC.dict");
+		GetVocabulary vocabTableInstance = new GetVocabulary("data/CDS/CDS.dict");
+		//GetVocabulary vocabTableInstance = new GetVocabulary("data/GC/GC.dict");
 		HashMap<String,Integer> vocabTable = vocabTableInstance.getVocabTable();
 
 		System.out.println("Calculating MI...");
 		MICalculator calculatorInstance = new MICalculator(vocabTable);
-		calculatorInstance.ObserveDirectory(new File("data/GC/MSL25-2019JUL01"), window);
+		calculatorInstance.ObserveDirectory(new File("data/CDS/corpus"), window);
+		//calculatorInstance.ObserveDirectory(new File("data/GC/MSL25-2019JUL01"), window);
 		SparseStore<Double> scoreMatrix = calculatorInstance.CalculateExpPMI();
+		calculatorInstance.ExportPMIMatrix("data/CDS/testMatrix");
 
 		System.out.println("Creating score function...");
 		ScorerFn scorer = new ScorerFn(vocabTable, scoreMatrix);
 		MSTparser testParser = new MSTparser(scorer);
 
 		System.out.println("Parsing corpus...");
-		//testParser.parseCorpus("data/sample_corpus", window, "trash");
-		testParser.parseCorpus("data/GC/MSL25-2019JUL01", window, "data/GC/parses");
+		testParser.parseCorpus("data/CDS/corpus", window, "data/CDS/parses");
+		//testParser.parseCorpus("data/GC/MSL25-2019JUL01", window, "data/GC/parses");
 
 		System.out.println("DONE!");
 	}

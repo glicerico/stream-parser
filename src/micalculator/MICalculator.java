@@ -10,9 +10,8 @@
 */
 package micalculator;
 
+import java.io.*;
 import java.util.HashMap;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 import org.ojalgo.array.Array1D;
@@ -27,6 +26,7 @@ public class MICalculator {
 	private HashMap<String,Integer> vocabulary;
 	private int dim; // vocabulary size
     private int fileCount;
+	private SparseStore<Double> pmi;
 
 	public MICalculator(HashMap<String,Integer> vocabulary) {
 		this.vocabulary = vocabulary;
@@ -89,7 +89,7 @@ public class MICalculator {
 		Array1D<Double> lhCounts = Array1D.PRIMITIVE64.makeSparse(dim);
 		SparseStore<Double> diagonalLH = SparseStore.PRIMITIVE.make(dim, dim);
 		SparseStore<Double> diagonalRH = SparseStore.PRIMITIVE.make(dim, dim);
-		SparseStore<Double> pmi = SparseStore.PRIMITIVE.make(dim, dim);
+		pmi = SparseStore.PRIMITIVE.make(dim, dim);
 
 		// Get wild_card counts for words on right/left hand sides (rh/lh, respectively)
 		obsMatrix.reduceColumns(Aggregator.SUM, rhCounts); // rh: N(*, y)
@@ -112,9 +112,9 @@ public class MICalculator {
 		return pmi;
 	}
 
-	void PrintObsMatrix() {
-		System.out.println("Observations Matrix:");
-		System.out.println(obsMatrix);
+	public void ExportPMIMatrix(String exportFileName) throws IOException {
+		ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(exportFileName));
+		outputStream.writeObject(pmi);
 	}
 
 }
