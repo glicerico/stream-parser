@@ -113,8 +113,13 @@ public class MICalculator {
 	}
 
 	public void ExportPMIMatrix(String exportFileName) throws IOException {
-		ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(exportFileName));
-		outputStream.writeObject(pmi);
+		try {
+			ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(exportFileName));
+			outputStream.writeObject(pmi);
+			outputStream.close();
+		} catch (IOException i) {
+			i.printStackTrace();
+		}
 	}
 
 }
