@@ -4,7 +4,7 @@
  *
  * Calculates, stores, imports a HashMap of e^PMI values from a corpus.
  * PMI as defined in: https://en.wikipedia.org/wiki/Pointwise_mutual_information
- * PMI = log[N(x,y) * N(*,*) / N(x,*) / N(*,y)]
+ * PMI = log_2[N(x,y) * N(*,*) / N(x,*) / N(*,y)]
  * @author		Andres Suarez, suarezandres@hotmail.com
  * @since		Sept 2019
 */
@@ -82,7 +82,7 @@ public class MICalculator {
 		}
 	}
 
-	// Converts observation counts into e^PMI, as done by Levy, Goldberg and Dagan (Levy et al. 2015).
+	// Converts observation counts into 2^PMI, as done by Levy, Goldberg and Dagan (Levy et al. 2015).
 	public SparseStore<Double> CalculateExpPMI() {
 		//SparseArray<Double> lhCounts = SparseArray.factory(Primitive64Array.FACTORY, dim).make();
 		SparseArray<Double> rhCounts = SparseArray.factory(Primitive64Array.FACTORY, dim).make();
@@ -116,5 +116,4 @@ public class MICalculator {
 		System.out.println("Observations Matrix:");
 		System.out.println(obsMatrix);
 	}
-
 }

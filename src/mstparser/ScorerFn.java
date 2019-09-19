@@ -28,14 +28,19 @@ public class ScorerFn {
 		this.scores = scores;
 	}
 
+	private double log2(double x) {
+		// 1.4426950408889634 is 1/0.6931471805599453 is 1/log(2)
+		return Math.log(x) * 1.4426950408889634;
+	}
+
 	double getScore(String w1, String w2) {
-		double curr_score = -1e10; // bad score for words not in vocabulary
+		double curr_score = Math.pow(2, -1); // negative score for words not in vocabulary;
 		if (vocabulary.containsKey(w1) && vocabulary.containsKey(w2)) {
 			int w1_index = vocabulary.get(w1);
 			int w2_index = vocabulary.get(w2);
 			curr_score = scores.get(w1_index, w2_index);
 		}
 
-		return Math.log(curr_score); // THIS ASSUMES THAT scores obtained are e^PMI
+		return log2(curr_score); // THIS ASSUMES THAT scores obtained are 2^PMI
 	}
 }
