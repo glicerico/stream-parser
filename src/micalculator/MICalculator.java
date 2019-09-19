@@ -30,6 +30,7 @@ public class MICalculator {
 
 	public MICalculator(HashMap<String,Integer> vocabulary) {
 		this.vocabulary = vocabulary;
+		vocabulary.put("###LEFT-WALL###", 0);
 		dim = vocabulary.size();
 		obsMatrix = SparseStore.PRIMITIVE.make(dim, dim);
 	}
@@ -64,6 +65,7 @@ public class MICalculator {
 	// Counts ordered word-pair occurrence (observations) in a sentence.
 	// Only counts pairs occurring within a given window.
 	private void ObserveSentence(String sentence, int window) {
+		sentence = "###LEFT-WALL### " + sentence; // ADDING LEFT WALL for comparison to Linas
 		String[] splitSent = sentence.split("\\s+");
 
 		// Observe pairs of words occurring within window in sentence

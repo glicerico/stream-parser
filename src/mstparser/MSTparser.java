@@ -40,6 +40,7 @@ public class MSTparser {
 		minlink = new ArrayList<Link>();
 		links = new ArrayList<Link>();
 		procSentence = new ArrayList<String>();
+		procSentence.add("###LEFT-WALL###");
 	}
 
 	// Process folder with text files (corpus), sending one file to parseFile at a time
@@ -97,9 +98,9 @@ public class MSTparser {
 		int word_num = procSentence.size();
 
 		// if this is the first word parsed, just add it to proc_sentece
-		if (word_num < 2) { // initialize sentence elsewhere to remove this conditional??
-			return;
-		}
+		//if (word_num < 2) { // initialize sentence elsewhere to remove this conditional??
+		//	return;
+		//}
 
 		minlink.add(new Link()); // initialize position with dummy link
 
@@ -208,8 +209,8 @@ public class MSTparser {
 			String textScore = String.valueOf(currLink.getScore());
 			// Here, we add one to the currLink sentence positions to have 1-based positions,
 			// as the ULL format
-			linksULL += String.join(" ", String.valueOf(currLink.getLi() + 1), wl,
-					String.valueOf(currLink.getRi() + 1), wr, textScore);
+			linksULL += String.join(" ", String.valueOf(currLink.getLi()), wl,
+					String.valueOf(currLink.getRi()), wr, textScore);
 			linksULL += "\n";
 		}
 		return linksULL;
