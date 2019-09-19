@@ -21,7 +21,6 @@ import java.util.Scanner;
 
 public class MSTparser {
 
-	public int window; // parsing window
 	private ArrayList<Link> stack;
 	private ArrayList<Link> minlink; // stores min valued Links
 	private ArrayList<Link> links;
@@ -103,8 +102,9 @@ public class MSTparser {
 
 		minlink.add(new Link()); // initialize position with dummy link
 
-		// try to connect new word with every word to its left
-		for (int i = word_num - 2; i >= 0 ; i--) {
+		// try to connect new word with every word to its left, within parsing window
+		int windowBoundary = Math.max(0, word_num - 2 - window + 1);
+		for (int i = word_num - 2; i >= windowBoundary; i--) {
 			Link last = popRightLinks(i);
 			if (last != null) {
 				minlink.set(i, getMinLink(last, minlink.get(last.getRi())));
@@ -123,6 +123,7 @@ public class MSTparser {
 			}
 			pushLeftLinks(i);
 		}
+		printParse();
 
 	}
 
