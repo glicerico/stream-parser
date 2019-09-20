@@ -19,6 +19,8 @@ import org.ojalgo.matrix.store.SparseStore;
 import org.ojalgo.function.aggregator.Aggregator;
 import org.ojalgo.array.SparseArray;
 import org.ojalgo.array.Primitive64Array;
+import org.ojalgo.structure.Access2D;
+import org.ojalgo.structure.ElementView2D;
 
 public class MICalculator {
 
@@ -113,8 +115,14 @@ public class MICalculator {
 	}
 
 	public void ExportPMIMatrix(String exportFileName) throws IOException {
-		ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(exportFileName));
-		outputStream.writeObject(pmi);
+	    System.out.println("Not implemented");
+		ElementView2D test = pmi.nonzeros();
+		while (test.hasNext()) {
+		System.out.println(test.next());
+		System.out.println(test.index());
+		double testd = (double) test.get();
+		System.out.println(Math.log(testd));
+		}
 	}
 
 }
