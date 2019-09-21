@@ -23,6 +23,7 @@ public class RunParser {
 		System.out.println("Stream parser!");
 
 		System.out.println("Reading vocabulary...");
+
 		GetVocabulary vocabTableInstance = new GetVocabulary("data/SampleData/sample_vocab.dict");
 		//GetVocabulary vocabTableInstance = new GetVocabulary("data/CDS/CDS.dict");
 		//GetVocabulary vocabTableInstance = new GetVocabulary("data/GC/GC.dict");
