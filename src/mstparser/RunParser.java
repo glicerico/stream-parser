@@ -18,6 +18,7 @@ public class RunParser {
 
 	public static void main(String[] args) throws IOException {
 		int window = 6;
+		SparseStore<Double> scoreMatrix;
 
 		System.out.println("Stream parser!");
 
@@ -29,13 +30,13 @@ public class RunParser {
 
 		System.out.println("Calculating PMI values...");
 		MICalculator calculatorInstance = new MICalculator(vocabTable);
-		calculatorInstance.ObserveDirectory(new File("data/SampleData/sample_corpus"), window);
-		//calculatorInstance.ObserveDirectory(new File("data/CDS/corpus"), window);
-		//calculatorInstance.ObserveDirectory(new File("data/GC/MSL25-2019JUL01"), window);
-		SparseStore<Double> scoreMatrix = calculatorInstance.CalculateExpPMI();
+//		calculatorInstance.ObserveDirectory(new File("data/SampleData/sample_corpus"), window);
+//		calculatorInstance.ObserveDirectory(new File("data/CDS/corpus"), window);
+//		calculatorInstance.ObserveDirectory(new File("data/GC/MSL25-2019JUL01"), window);
+//		scoreMatrix = calculatorInstance.CalculateExpPMI();
 
 		System.out.println("Exporting PMI values...");
-		calculatorInstance.ExportPMIMatrix("data/SampleData/testMatrix.fmi");
+//		calculatorInstance.ExportPMIMatrix("data/SampleData/testMatrix.fmi");
 		scoreMatrix = calculatorInstance.ImportPMIMatrix("data/SampleData/testMatrix.fmi");
 
 		System.out.println("Creating score function...");
