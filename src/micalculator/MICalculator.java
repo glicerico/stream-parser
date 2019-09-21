@@ -28,7 +28,7 @@ public class MICalculator {
 	private HashMap<String,Integer> vocabulary;
 	private int dim; // vocabulary size
     private int fileCount;
-	private SparseStore<Double> pmi;
+	private SparseStore<Double> pmi = null;
 
 	public MICalculator(HashMap<String,Integer> vocabulary) {
 		this.vocabulary = vocabulary;
@@ -115,14 +115,36 @@ public class MICalculator {
 	}
 
 	public void ExportPMIMatrix(String exportFileName) throws IOException {
-	    System.out.println("Not implemented");
-		ElementView2D test = pmi.nonzeros();
-		while (test.hasNext()) {
-			System.out.println(test.next());
-			System.out.println(test.index());
-			double testd = (double) test.get();
-			System.out.println(Math.log(testd));
+		ElementView2D nz = pmi.nonzeros();
+		try {
+			File outFile = new File(exportFileName);
+			FileOutputStream is = new FileOutputStream(outFile);
+			OutputStreamWriter osw = new OutputStreamWriter(is);
+			Writer w = new BufferedWriter(osw);
+			while (nz.hasNext()) {
+				nz.next();
+//				String lw = vocabulary.get(test.row()); // .get only works from string to integer
+				w.write(nz.row() + " " + nz.column() + " " + Math.log(nz.doubleValue()) + "\n");
+			}
+			w.close();
+		} catch (IOException i) {
+			System.err.println("Problem writing PMI matrix to file " + exportFileName);
 		}
 	}
 
+	public SparseStore<Double> ImportPMIMatrix(String importFileName) throws IOException {
+	    pmi = SparseStore.PRIMITIVE.make(dim, dim);
+		try (Scanner scanner = new Scanner(new File(importFileName))) {
+			while (scanner.hasNext()){
+			    String[] fields = scanner.nextLine().split("\\s+");
+			    pmi.set(Integer.parseInt(fields[0]), Integer.parseInt(fields[1]), Math.exp(Double.parseDouble(fields[2])));
+			}
+		} catch (IOException e) {
+			System.err.println("Problem reading PMI matrix from file " + importFileName);
+		}
+		System.out.println(pmi.get(0,0));
+		System.out.println(pmi.get(0,1));
+		System.out.println(pmi.get(0,2));
+		return pmi;
+	}
 }

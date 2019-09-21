@@ -27,13 +27,16 @@ public class RunParser {
 		//GetVocabulary vocabTableInstance = new GetVocabulary("data/GC/GC.dict");
 		HashMap<String,Integer> vocabTable = vocabTableInstance.getVocabTable();
 
-		System.out.println("Calculating MI...");
+		System.out.println("Calculating PMI values...");
 		MICalculator calculatorInstance = new MICalculator(vocabTable);
 		calculatorInstance.ObserveDirectory(new File("data/sample_corpus"), window);
 		//calculatorInstance.ObserveDirectory(new File("data/CDS/corpus"), window);
 		//calculatorInstance.ObserveDirectory(new File("data/GC/MSL25-2019JUL01"), window);
 		SparseStore<Double> scoreMatrix = calculatorInstance.CalculateExpPMI();
-		calculatorInstance.ExportPMIMatrix("data/CDS/testMatrix");
+
+		System.out.println("Exporting PMI values...");
+		calculatorInstance.ExportPMIMatrix("data/testMatrix.fmi");
+		scoreMatrix = calculatorInstance.ImportPMIMatrix("data/testMatrix.fmi");
 
 		System.out.println("Creating score function...");
 		ScorerFn scorer = new ScorerFn(vocabTable, scoreMatrix);
