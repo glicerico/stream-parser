@@ -24,9 +24,11 @@ hs_err_pid*
 
 # IDEA
 .idea
+out/*
 
 # Open text files
 *.txt.swp
 
 # Test files
 trash/*
+

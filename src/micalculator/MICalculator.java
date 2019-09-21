@@ -10,9 +10,8 @@
 */
 package micalculator;
 
+import java.io.*;
 import java.util.HashMap;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 import org.ojalgo.array.Array1D;
@@ -20,6 +19,8 @@ import org.ojalgo.matrix.store.SparseStore;
 import org.ojalgo.function.aggregator.Aggregator;
 import org.ojalgo.array.SparseArray;
 import org.ojalgo.array.Primitive64Array;
+import org.ojalgo.structure.Access2D;
+import org.ojalgo.structure.ElementView2D;
 
 public class MICalculator {
 
@@ -27,6 +28,7 @@ public class MICalculator {
 	private HashMap<String,Integer> vocabulary;
 	private int dim; // vocabulary size
     private int fileCount;
+	private SparseStore<Double> pmi = null;
 
 	public MICalculator(HashMap<String,Integer> vocabulary) {
 		this.vocabulary = vocabulary;
@@ -89,7 +91,7 @@ public class MICalculator {
 		Array1D<Double> lhCounts = Array1D.PRIMITIVE64.makeSparse(dim);
 		SparseStore<Double> diagonalLH = SparseStore.PRIMITIVE.make(dim, dim);
 		SparseStore<Double> diagonalRH = SparseStore.PRIMITIVE.make(dim, dim);
-		SparseStore<Double> pmi = SparseStore.PRIMITIVE.make(dim, dim);
+		pmi = SparseStore.PRIMITIVE.make(dim, dim);
 
 		// Get wild_card counts for words on right/left hand sides (rh/lh, respectively)
 		obsMatrix.reduceColumns(Aggregator.SUM, rhCounts); // rh: N(*, y)
@@ -112,9 +114,34 @@ public class MICalculator {
 		return pmi;
 	}
 
-	void PrintObsMatrix() {
-		System.out.println("Observations Matrix:");
-		System.out.println(obsMatrix);
+	public void ExportPMIMatrix(String exportFileName) throws IOException {
+		ElementView2D nz = pmi.nonzeros();
+		try {
+			File outFile = new File(exportFileName);
+			FileOutputStream is = new FileOutputStream(outFile);
+			OutputStreamWriter osw = new OutputStreamWriter(is);
+			Writer w = new BufferedWriter(osw);
+			while (nz.hasNext()) {
+				nz.next();
+//				String lw = vocabulary.get(test.row()); // .get only works from string to integer
+				w.write(nz.row() + " " + nz.column() + " " + Math.log(nz.doubleValue()) + "\n");
+			}
+			w.close();
+		} catch (IOException i) {
+			System.err.println("Problem writing PMI matrix to file " + exportFileName);
+		}
 	}
 
+	public SparseStore<Double> ImportPMIMatrix(String importFileName) throws IOException {
+	    pmi = SparseStore.PRIMITIVE.make(dim, dim);
+		try (Scanner scanner = new Scanner(new File(importFileName))) {
+			while (scanner.hasNext()){
+			    String[] fields = scanner.nextLine().split("\\s+");
+			    pmi.set(Integer.parseInt(fields[0]), Integer.parseInt(fields[1]), Math.exp(Double.parseDouble(fields[2])));
+			}
+		} catch (IOException e) {
+			System.err.println("Problem reading PMI matrix from file " + importFileName);
+		}
+		return pmi;
+	}
 }

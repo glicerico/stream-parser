@@ -24,7 +24,6 @@ public class RunCalculator {
 		MICalculator calculatorInstance = new MICalculator(vocabTable);
 		calculatorInstance.ObserveDirectory(new File("data/sample_corpus/"), 3);
 
-		calculatorInstance.PrintObsMatrix();
 		calculatorInstance.CalculateExpPMI();
 	}
 }
