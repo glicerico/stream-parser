@@ -142,9 +142,6 @@ public class MICalculator {
 		} catch (IOException e) {
 			System.err.println("Problem reading PMI matrix from file " + importFileName);
 		}
-		System.out.println(pmi.get(0,0));
-		System.out.println(pmi.get(0,1));
-		System.out.println(pmi.get(0,2));
 		return pmi;
 	}
 }

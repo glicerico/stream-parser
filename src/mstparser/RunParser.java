@@ -22,28 +22,28 @@ public class RunParser {
 		System.out.println("Stream parser!");
 
 		System.out.println("Reading vocabulary...");
-		GetVocabulary vocabTableInstance = new GetVocabulary("data/sample_vocab.dict");
+		GetVocabulary vocabTableInstance = new GetVocabulary("data/SampleData/sample_vocab.dict");
 		//GetVocabulary vocabTableInstance = new GetVocabulary("data/CDS/CDS.dict");
 		//GetVocabulary vocabTableInstance = new GetVocabulary("data/GC/GC.dict");
 		HashMap<String,Integer> vocabTable = vocabTableInstance.getVocabTable();
 
 		System.out.println("Calculating PMI values...");
 		MICalculator calculatorInstance = new MICalculator(vocabTable);
-		calculatorInstance.ObserveDirectory(new File("data/sample_corpus"), window);
+		calculatorInstance.ObserveDirectory(new File("data/SampleData/sample_corpus"), window);
 		//calculatorInstance.ObserveDirectory(new File("data/CDS/corpus"), window);
 		//calculatorInstance.ObserveDirectory(new File("data/GC/MSL25-2019JUL01"), window);
 		SparseStore<Double> scoreMatrix = calculatorInstance.CalculateExpPMI();
 
 		System.out.println("Exporting PMI values...");
-		calculatorInstance.ExportPMIMatrix("data/testMatrix.fmi");
-		scoreMatrix = calculatorInstance.ImportPMIMatrix("data/testMatrix.fmi");
+		calculatorInstance.ExportPMIMatrix("data/SampleData/testMatrix.fmi");
+		scoreMatrix = calculatorInstance.ImportPMIMatrix("data/SampleData/testMatrix.fmi");
 
 		System.out.println("Creating score function...");
 		ScorerFn scorer = new ScorerFn(vocabTable, scoreMatrix);
 		MSTparser testParser = new MSTparser(scorer);
 
 		System.out.println("Parsing corpus...");
-		testParser.parseCorpus("data/sample_corpus", window, "data/sample_parses");
+		testParser.parseCorpus("data/SampleData/sample_corpus", window, "data/SampleData/sample_parses");
 		//testParser.parseCorpus("data/CDS/corpus", window, "data/CDS/parses");
 		//testParser.parseCorpus("data/GC/MSL25-2019JUL01", window, "data/GC/parses");
 
