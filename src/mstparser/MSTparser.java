@@ -104,27 +104,28 @@ public class MSTparser {
 
 		// try to connect new word with every word to its left, within parsing window
 		int windowBoundary = Math.max(0, word_num - 2 - window + 1);
-		for (int i = word_num - 2; i >= windowBoundary; i--) {
+		for (int i = word_num - 2; i >= 0; i--) {
 			Link last = popRightLinks(i);
-			if (last != null) {
-				minlink.set(i, getMinLink(last, minlink.get(last.getRi())));
+			if (i >= windowBoundary) { // Only continue if i is within parsing window
+				if (last != null) {
+					minlink.set(i, getMinLink(last, minlink.get(last.getRi())));
+				}
+				double currScore = scorer.getScore(procSentence.get(i), procSentence.get(word_num - 1));
+				if (
+						(currScore > 0)
+								&& (currScore > getLinkScore(minlink.get(i)))
+								&& (currScore > getStackMaxScore())) {
+					stack.forEach(this::unLink); // unlink weakest crossing links
+					stack = new ArrayList<Link>();
+					unLink(minlink.get(i)); // unlink weakest link in loop
+					Link new_link = new Link(i, word_num - 1, currScore);
+					minlink.set(i, new_link); // assign weakest link from i to word
+					links.add(new_link);
+				}
+				pushLeftLinks(i);
 			}
-			double currScore = scorer.getScore(procSentence.get(i), procSentence.get(word_num - 1));
-			if (
-			  (currScore > 0)
-			  && (currScore > getLinkScore(minlink.get(i)))
-			  && (currScore > getStackMaxScore())) {
-				stack.forEach(this::unLink); // unlink weakest crossing links
-				stack = new ArrayList<Link>();
-				unLink(minlink.get(i)); // unlink weakest link in loop
-				Link new_link = new Link(i, word_num - 1, currScore);
-				minlink.set(i, new_link); // assign weakest link from i to word
-				links.add(new_link);
-			}
-			pushLeftLinks(i);
 		}
 		printParse();
-
 	}
 
 	private double getLinkScore(Link this_link) {

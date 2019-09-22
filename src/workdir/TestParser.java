@@ -17,7 +17,7 @@ import java.util.HashMap;
 public class TestParser {
 
 	public static void main(String[] args) throws IOException {
-		int window = 2;
+		int window = 1;
 
 		System.out.println("Stream parser!");
 
