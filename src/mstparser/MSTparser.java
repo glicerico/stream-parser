@@ -91,7 +91,7 @@ public class MSTparser {
 	// Adds one word to the current parsed sentence if other words have been
 	// processed. If this is the first word in parse, it just gets added to
 	// the processed sentence.
-    private void parseWord(String word, int window) { //TODO: include window
+    private void parseWord(String word, int window) {
 		procSentence.add(word);
 		int word_num = procSentence.size();
 
