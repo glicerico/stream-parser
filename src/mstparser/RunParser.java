@@ -37,7 +37,7 @@ public class RunParser {
 		String corpusPath = args[7];
 		String parsesPath = args[8];
 
-		SparseStore<Double> scoreMatrix = null;
+		SparseStore<Double> scoreMatrix;
 
 		System.out.println("Stream parser!");
 		System.out.println("Reading vocabulary...");
