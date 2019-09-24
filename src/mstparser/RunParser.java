@@ -52,10 +52,10 @@ public class RunParser {
 			if (exportScores) {
 				System.out.println("Exporting PMI values...");
 				calculatorInstance.ExportPMIMatrix(scoresFilePath);
+			}
 		} else {
 			System.out.println("Importing PMI values...");
 			scoreMatrix = calculatorInstance.ImportPMIMatrix(scoresFilePath);
-			}
 		}
 
 		System.out.println("Creating score function...");
