@@ -18,7 +18,7 @@ public class RunCalculator {
 	public static void main(String[] args) {
 		System.out.println("MI Calculator!");
 
-		GetVocabulary vocabTableInstance = new GetVocabulary("data/sample_vocab.dict");
+		GetVocabulary vocabTableInstance = new GetVocabulary("data/sample.vocab");
 		HashMap vocabTable = vocabTableInstance.getVocabTable();
 
 		MICalculator calculatorInstance = new MICalculator(vocabTable);
