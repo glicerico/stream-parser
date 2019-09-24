@@ -1,4 +1,4 @@
-/*
+/**
  * MSTparser class
 
  * Main attributes:
@@ -125,7 +125,6 @@ public class MSTparser {
 				pushLeftLinks(i);
 			}
 		}
-		printParse();
 	}
 
 	private double getLinkScore(Link this_link) {

@@ -1,4 +1,4 @@
-/*
+/**
  * 
  * Entry point for the MST-parser. Calls the class and executes the parser
  *
@@ -17,37 +17,43 @@ import java.util.HashMap;
 public class RunParser {
 
 	public static void main(String[] args) throws IOException {
-		int window = 6;
-		SparseStore<Double> scoreMatrix;
+		int windowObserve = 6;
+		int windowParse = 30;
+		boolean calculateScores = false; // false implies scores are imported
+		boolean exportScores = false; // only relevant if calculateScores is true
+		String vocabFile = "data/GC/GC.dict";
+		String scoresFilePath = "data/GC/scoreMatrices/MSL25-2019JUL01.fmi";
+		String observeCorpusPath = "data/GC/corpora/MSL25-2019JUL01/";
+		String corpusPath = "data/GC/corpora/SS";
+		String parsesPath = "data/GC/parses/SS";
+
+		SparseStore<Double> scoreMatrix = null;
 
 		System.out.println("Stream parser!");
-
 		System.out.println("Reading vocabulary...");
-
-		GetVocabulary vocabTableInstance = new GetVocabulary("data/SampleData/sample_vocab.dict");
-		//GetVocabulary vocabTableInstance = new GetVocabulary("data/CDS/CDS.dict");
-		//GetVocabulary vocabTableInstance = new GetVocabulary("data/GC/GC.dict");
+		GetVocabulary vocabTableInstance = new GetVocabulary(vocabFile);
 		HashMap<String,Integer> vocabTable = vocabTableInstance.getVocabTable();
 
-		System.out.println("Calculating PMI values...");
 		MICalculator calculatorInstance = new MICalculator(vocabTable);
-//		calculatorInstance.ObserveDirectory(new File("data/SampleData/sample_corpus"), window);
-//		calculatorInstance.ObserveDirectory(new File("data/CDS/corpus"), window);
-//		calculatorInstance.ObserveDirectory(new File("data/GC/MSL25-2019JUL01"), window);
-//		scoreMatrix = calculatorInstance.CalculateExpPMI();
-
-		System.out.println("Exporting PMI values...");
-//		calculatorInstance.ExportPMIMatrix("data/SampleData/testMatrix.fmi");
-		scoreMatrix = calculatorInstance.ImportPMIMatrix("data/SampleData/testMatrix.fmi");
+		if (calculateScores) {
+			System.out.println("Calculating PMI values...");
+			calculatorInstance.ObserveDirectory(new File(observeCorpusPath), windowObserve);
+			scoreMatrix = calculatorInstance.CalculateExpPMI();
+			if (exportScores) {
+				System.out.println("Exporting PMI values...");
+				calculatorInstance.ExportPMIMatrix(scoresFilePath);
+		} else {
+			System.out.println("Importing PMI values...");
+			scoreMatrix = calculatorInstance.ImportPMIMatrix(scoresFilePath);
+			}
+		}
 
 		System.out.println("Creating score function...");
 		ScorerFn scorer = new ScorerFn(vocabTable, scoreMatrix);
 		MSTparser testParser = new MSTparser(scorer);
 
 		System.out.println("Parsing corpus...");
-		testParser.parseCorpus("data/SampleData/sample_corpus", window, "data/SampleData/sample_parses");
-		//testParser.parseCorpus("data/CDS/corpus", window, "data/CDS/parses");
-		//testParser.parseCorpus("data/GC/MSL25-2019JUL01", window, "data/GC/parses");
+		testParser.parseCorpus(corpusPath, windowParse, parsesPath);
 
 		System.out.println("DONE!");
 	}

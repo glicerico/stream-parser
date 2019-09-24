@@ -1,4 +1,4 @@
-/*
+/**
  * GetVocabulary class
 
  * Main attributes:

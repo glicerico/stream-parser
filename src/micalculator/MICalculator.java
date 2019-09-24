@@ -1,4 +1,4 @@
-/*
+/**
  * 
  * Mutual Information Class.
  *

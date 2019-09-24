@@ -1,4 +1,4 @@
-/*
+/**
  * MSTparser class
 
  * Main attributes:

@@ -1,4 +1,4 @@
-/*
+/**
  * 
  * Entry point for the MI calculator. Calls the class to process a text file
  * and calculate pair-wise MI from it.

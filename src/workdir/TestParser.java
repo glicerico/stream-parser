@@ -1,4 +1,4 @@
-/*
+/**
  * 
  * Entry point for the MST-parser. Calls the class and executes the parser
  *
