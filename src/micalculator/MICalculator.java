@@ -2,7 +2,7 @@
  * 
  * Mutual Information Class.
  *
- * Calculates, stores, imports a HashMap of e^PMI values from a corpus.
+ * Calculates, stores, imports a matrix of e^PMI values from a corpus.
  * PMI as defined in: https://en.wikipedia.org/wiki/Pointwise_mutual_information
  * PMI = log[N(x,y) * N(*,*) / N(x,*) / N(*,y)]
  * @author		Andres Suarez, suarezandres@hotmail.com

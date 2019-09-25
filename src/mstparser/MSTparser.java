@@ -3,10 +3,14 @@
 
  * Main attributes:
  * 
- * Defines the MSTparser class and its methods
+ * Unlabeled dependency parser for streams of tokens
+ *
+ * Java implementation of the Minimum Spanning Tree (MST) parser specified by Deniz Yuret in his PhD thesis: Yuret, Deniz.
+ * "Discovery of linguistic relations using lexical attraction." arXiv preprint cmp-lg/9805009 (1998).
  *
  * @author		Andres Suarez, suarezandres@hotmail.com
  * @since		Sept 2019
+ * @param		(ScoreFn) scorer: instance of a class with a method that returns a score given a word-pair
 */
 package mstparser;
 

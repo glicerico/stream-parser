@@ -5,12 +5,11 @@
  * @author		Andres Suarez, suarezandres@hotmail.com
  * @since		Sept 2019
 */
-package workdir;
+package yuretscores;
 
 import mstparser.*;
 import org.ojalgo.matrix.store.SparseStore;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 

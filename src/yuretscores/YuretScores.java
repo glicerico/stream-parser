@@ -1,7 +1,7 @@
 /**
 * Simple score class
 * */
-package workdir;
+package yuretscores;
 
 import org.ojalgo.matrix.store.SparseStore;
 

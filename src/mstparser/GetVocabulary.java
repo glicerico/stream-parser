@@ -3,12 +3,11 @@
 
  * Main attributes:
  * 
- * Generator of a vocabulary HashMap from a list of vocabulary.
- * The vocabulary is expected to match the indexing used in the
- * scores HashMap.
- * 
+ * Generator of a vocabulary HashMap from a list of vocabulary in text format.
+ *
  * @author		Andres Suarez, suarezandres@hotmail.com
  * @since		Sept 2019
+ * @param		(String) vocabFilePath: file path to vocabulary file
 */
 package mstparser;
 
@@ -22,10 +21,10 @@ public class GetVocabulary {
 	private HashMap<String,Integer> vocabularyTable;
 
 	// The constructor opens the file and builds the hashmap from it
-	public GetVocabulary(String vocab_file) {
+	public GetVocabulary(String vocabFilePath) {
 		vocabularyTable = new HashMap<>();
 		try {
-			Scanner scanner = new Scanner(new File(vocab_file));
+			Scanner scanner = new Scanner(new File(vocabFilePath));
 			int index = 0;
 			while (scanner.hasNextLine()) {
 				String[] split_line = scanner.nextLine().split("\\s+");
