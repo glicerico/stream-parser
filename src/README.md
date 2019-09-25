@@ -1,3 +1,5 @@
+# src
+
 This folder contains the code of the project, structured as follows:
 
 + `micalculator` is a package to estimate the pointwise mutual information (PMI) of word-pairs from observations 
