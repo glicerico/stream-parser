@@ -1,8 +1,9 @@
 #!/bin/bash
 
-# Runs stream parser on given corpus, and evaluates resulting parses against given GS
+# Runs stream parser on given corpus, and evaluates resulting parses against given GS using
+# github.com/singnet/language-learning parse-evaluator
 #
-# Usage:  stream_evaluate.sh <vocabFilePath> <corpusPath> <parsesPath> <GSPath>
+# Usage:  stream_evaluate.sh <winObserve> <winParse> <vocabFilePath> <corpusPath> <parsesPath> <GSPath>
 
 STREAMPATH='/home/andres/IdeaProjects/stream-parser';
 winObserve=$1;
