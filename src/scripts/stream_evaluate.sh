@@ -21,26 +21,28 @@ echo "winObserve winParse Recall Precision F1" > results.dat # write header
 
 for ((winObserve=1; winObserve<=maxWinObserve; winObserve++))
 do
-  for ((winParse=1; winParse<=maxWinObserve; winParse++))
+  for ((winParse=1; winParse<=maxWinParse; winParse++))
   do
+    echo "Evaluating: winObserve=${winObserve} winParse=${winParse}"
     parsesPath=$3${winObserve}_${winParse};
     scoresFilePath=""; # Only used if exportScores is true
 
     # Parse the corpus with current window sizes
-    java -classpath $STREAMPATH/out/production/stream-parser:/home/andres/src/ojalgo-47.1.1.jar mstparser.RunParser "$winObserve" $winParse $calculateScores $exportScores $vocabFilePath $scoresFilePath $observeCorpusPath $corpusPath $parsesPath
+    java -classpath $STREAMPATH/out/production/stream-parser:/home/andres/src/ojalgo-47.1.1.jar mstparser.RunParser "$winObserve" "$winParse" $calculateScores $exportScores "$vocabFilePath" "$scoresFilePath" "$observeCorpusPath" "$corpusPath" "$parsesPath"
 
     # Evaluate current parses against the gold standard
-    parse-evaluator -i -r $GSPath -t $parsesPath
+    parse-evaluator -i -r "$GSPath" -t "$parsesPath"
 
     # Obtain scores from evaluation
     scores=() # scores array
-    cat ${parsesPath}.stat | grep -E 'Recall|Precision|F1' > tmp.file # tmp.file used to avoid subshell from piping
-    while read f1 f2
+    grep -E 'Recall|Precision|F1' < "${parsesPath}.stat"  > tmp.file # tmp.file used to avoid subshell from piping
+    while read -r f1 f2
     do
-      scores+=($f2)
+      scores+=("$f2")
     done < tmp.file
     rm tmp.file
 
+    # Store results in file
     echo "$winObserve" "$winParse" "${scores[@]}" >> results.dat
   done
 done
