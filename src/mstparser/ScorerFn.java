@@ -12,6 +12,8 @@
  *
  * @author		Andres Suarez, suarezandres@hotmail.com
  * @since		Sept 2019
+ * @param		(HashMap) vocabulary: Mapping between words and indexes
+ * @param		(SparseStore) scores: matrix with word-pair scores, indexed according to vocab mapping
 */
 package mstparser;
 
