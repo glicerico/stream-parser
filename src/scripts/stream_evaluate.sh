@@ -8,29 +8,30 @@
 # Usage:  stream_evaluate.sh <vocabFilePath> <corpusPath> <GSPath> <maxWinObserve> <maxWinParse>
 
 STREAMPATH='/home/andres/IdeaProjects/stream-parser';
-maxWinObserve=$4;
-maxWinParse=$5;
-calculateScores=true;
-exportScores=false;
 vocabFilePath=$1;
 observeCorpusPath=$2;
 corpusPath=$2;
 GSPath=$3;
+maxWinObserve=$4;
+maxWinParse=$5;
 
 echo "# Parse evaluations" > results.dat # write header
 echo "# winObserve winParse Recall Precision F1" > results.dat # write header
 
 mkdir -p parses
 mkdir -p stats
+mkdir -p scores
 # Loop to parse and evaluate with range of windows
 for ((winObserve=1; winObserve<=maxWinObserve; winObserve++))
 do
+  calculateScores=true; # in first pass for each winObserve, store scores
+  exportScores=true;
+  scoresFilePath="scores/${winObserve}_${winParse}.fmi"; # Path to store/import scores
   for ((winParse=1; winParse<=maxWinParse; winParse++))
   do
     echo "Evaluating: winObserve=${winObserve} winParse=${winParse}"
     currParses="wObs${winObserve}_wPar${winParse}";
     parsesPath="parses/${currParses}";
-    scoresFilePath="scores/${winObserve}_${winParse}"; # Only used if exportScores is true
 
     # Parse the corpus with current window sizes
     java -classpath $STREAMPATH/out/production/stream-parser:/home/andres/src/ojalgo-47.1.1.jar mstparser.RunParser "$winObserve" "$winParse" $calculateScores $exportScores "$vocabFilePath" "$scoresFilePath" "$observeCorpusPath" "$corpusPath" "$parsesPath"
@@ -50,6 +51,9 @@ do
 
     # Store results in file
     echo "$winObserve" "$winParse" "${scores[@]}" >> results.dat
+
+    calculateScores=false; # after first pass, switch to false and import stored scores
+    exportScores=false;
   done
   echo "" >> results.dat # newline, useful for splot in gnuplot
 done
