@@ -1,7 +1,9 @@
 #!/bin/bash
 
-# Runs stream parser on given corpus, and evaluates resulting parses against given GS using
-# github.com/singnet/language-learning parse-evaluator
+# Runs stream parser on given corpus, and evaluates resulting parses against given GS using SingNet's parse-evaluator
+# at github.com/singnet/language-learning
+#
+# NOTE: language-learning conda environment needs to be active before running this script
 #
 # Usage:  stream_evaluate.sh <maxWinObserve> <maxWinParse> <vocabFilePath> <corpusPath> <parsesPath> <GSPath>
 
@@ -15,7 +17,8 @@ observeCorpusPath=$2;
 corpusPath=$2;
 GSPath=$4;
 
-echo "winObserve winParse Recall Precision F1" > results.dat # write header
+echo "# Parse evaluations" > results.dat # write header
+echo "# winObserve winParse Recall Precision F1" > results.dat # write header
 
 # Loop to parse and evaluate with range of windows
 
@@ -45,4 +48,21 @@ do
     # Store results in file
     echo "$winObserve" "$winParse" "${scores[@]}" >> results.dat
   done
+  echo "" >> results.dat # newline, useful for splot in gnuplot
 done
+
+mkdir plots
+gnuplot -persist << -EOFMarker
+  reset
+  set terminal png
+  set xlabel "winObserve"
+  set ylabel "winParse"
+  set title "Parse results"
+  set output "plots/recall.png"
+  splot 'results.dat' using 1:2:3 with lines title "Recall"
+  set output "plots/precision.png"
+  splot 'results.dat' using 1:2:4 with lines title "Precision"
+  set output "plots/f1score.png"
+  splot 'results.dat' using 1:2:5 with lines title "F1"
+-EOFMarker
+
