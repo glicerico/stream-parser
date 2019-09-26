@@ -67,6 +67,7 @@ gnuplot -persist << -EOFMarker
   set key outside
 
   # Preparing three different plots
+  set cbrange [0.3:0.9]
   set xlabel "winObserve"
   set ylabel "winParse"
   set title "Recall"
