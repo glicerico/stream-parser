@@ -5,15 +5,15 @@
 #
 # NOTE: language-learning conda environment needs to be active before running this script
 #
-# Usage:  stream_evaluate.sh <vocabFilePath> <corpusPath> <GSPath> <maxWinObserve> <maxWinParse>
+# Usage:  stream_evaluate.sh <vocabFilePath> <observeCorpusPath> <corpusPath> <GSPath> <maxWinObserve> <maxWinParse>
 
 STREAMPATH='/home/andres/IdeaProjects/stream-parser';
 vocabFilePath=$1;
 observeCorpusPath=$2;
-corpusPath=$2;
-GSPath=$3;
-maxWinObserve=$4;
-maxWinParse=$5;
+corpusPath=$3;
+GSPath=$4;
+maxWinObserve=$5;
+maxWinParse=$6;
 
 echo "# Parse evaluations" > results.dat # write header
 echo "# winObserve winParse Recall Precision F1" > results.dat # write header
