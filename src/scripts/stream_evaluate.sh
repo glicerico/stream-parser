@@ -26,7 +26,7 @@ for ((winObserve=1; winObserve<=maxWinObserve; winObserve++))
 do
   calculateScores=true; # in first pass for each winObserve, store scores
   exportScores=true;
-  scoresFilePath="scores/${winObserve}_1}.fmi"; # Path to store/import scores
+  scoresFilePath="scores/${winObserve}_1.fmi"; # Path to store/import scores
   for ((winParse=1; winParse<=maxWinParse; winParse++))
   do
     echo "Evaluating: winObserve=${winObserve} winParse=${winParse}"
