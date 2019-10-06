@@ -19,3 +19,9 @@ micalculator (e.g. context-sensitive scores coming from a DNN).
  
 The `data` folder contains sample data to try directly with the `stream-parser`. 
 It can be used as a working directory for your project.
+
+## TODO
+
+- Parallelize MI calculation
+- Implement distance weights when observing
+- Implement distance weights when parsing?
