@@ -25,6 +25,9 @@ mkdir -p scores
 bestF1=0
 bestWinObserve=0
 bestWinParse=0
+
+source activate ull # conda environment needed for parse-evaluator
+
 # Loop to parse and evaluate with range of windows
 for ((winObserve=1; winObserve<=maxWinObserve; winObserve++))
 do
@@ -41,7 +44,6 @@ do
     java -classpath $STREAMPATH/out/production/stream-parser:/home/andres/src/ojalgo-47.1.1.jar mstparser.RunParser "$winObserve" "$winParse" $calculateScores $exportScores "$vocabFilePath" "$scoresFilePath" "$observeCorpusPath" "$corpusPath" "$parsesPath"
 
     # Evaluate current parses against the gold standard
-    source activate ull
     parse-evaluator -i -r "$GSPath" -t "$parsesPath"
 
     # Obtain scores from evaluation
@@ -53,8 +55,9 @@ do
     done < tmp.file
     mv ${currParses}.stat stats
     rm tmp.file
+
     # Keep track of best score
-    if [ "$bestF1" -lt "${scores[2]}" ];
+    if (( $(echo "$bestF1 < ${scores[2]}" |bc -l) ));
     then
 	    bestF1=${scores[2]};
 	    bestWinObserve=$winObserve;
