@@ -21,6 +21,10 @@ echo "# winObserve winParse Recall Precision F1" > results.dat # write header
 mkdir -p parses
 mkdir -p stats
 mkdir -p scores
+
+bestF1=0
+bestWinObserve=0
+bestWinParse=0
 # Loop to parse and evaluate with range of windows
 for ((winObserve=1; winObserve<=maxWinObserve; winObserve++))
 do
@@ -37,6 +41,7 @@ do
     java -classpath $STREAMPATH/out/production/stream-parser:/home/andres/src/ojalgo-47.1.1.jar mstparser.RunParser "$winObserve" "$winParse" $calculateScores $exportScores "$vocabFilePath" "$scoresFilePath" "$observeCorpusPath" "$corpusPath" "$parsesPath"
 
     # Evaluate current parses against the gold standard
+    source activate ull
     parse-evaluator -i -r "$GSPath" -t "$parsesPath"
 
     # Obtain scores from evaluation
@@ -48,6 +53,13 @@ do
     done < tmp.file
     mv ${currParses}.stat stats
     rm tmp.file
+    # Keep track of best score
+    if [ "$bestF1" -lt "${scores[2]}" ];
+    then
+	    bestF1=${scores[2]};
+	    bestWinObserve=$winObserve;
+	    bestWinParse=$winParse;
+    fi
 
     # Store results in file
     echo "$winObserve" "$winParse" "${scores[@]}" >> results.dat
@@ -57,6 +69,8 @@ do
   done
   echo "" >> results.dat # newline, useful for splot in gnuplot
 done
+
+echo "Best F1-score was: ${bestF1}, with params winObserve: ${bestWinObserve}; winParse: ${bestWinParse}"
 
 # Plotting results with gnuplot
 mkdir -p plots
