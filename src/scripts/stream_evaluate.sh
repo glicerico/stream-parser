@@ -97,10 +97,10 @@ gnuplot -persist << -EOFMarker
   set title "Precision"
   set output "plots/precision.png"
   splot 'results.dat' using 1:2:4 with lines notitle
-  set title "F1 score"
+  set title "Stream parser F1 scores"
   set output "plots/f1score.png"
   splot 'results.dat' using 1:2:5 with lines notitle
 -EOFMarker
 echo "Results plots stored in 'plots' folder"
 
-eog plots/f1score.png
+eog plots/f1score.png &
